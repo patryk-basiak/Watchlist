@@ -17,6 +17,9 @@ class Movie:
     def delete_review(self, review):
         self.reviews.remove(review)
 
+    def get_values(self):
+        return self.title, self.release_year, self.genre, self.description
+
     def print_reviews(self):
         print(self.title + " reviews: ")
         for review in self.reviews:
