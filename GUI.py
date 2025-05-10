@@ -1,13 +1,9 @@
-import tkinter
 from tkinter import END
 
 import customtkinter
 from CTkTable import *
 
 import Utils
-from Objects.Genre import Genre
-from Objects.Movie import Movie
-from Utils import load_data
 
 class App(customtkinter.CTk):
     def __init__(self, user):
@@ -70,7 +66,7 @@ class App(customtkinter.CTk):
         self.box.grid(row=1, column=0, padx=20,pady=10)
 
         #find movies
-        self.second_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
+        self.second_frame = customtkinter.CTkScrollableFrame(self, corner_radius=0, fg_color="transparent")
         self.second_frame.grid_columnconfigure(0, weight=1)
         self.movie_entry = customtkinter.CTkEntry(self.second_frame)
         self.movie_entry.grid(row=1, column=0, padx=20, pady=10)
@@ -78,9 +74,9 @@ class App(customtkinter.CTk):
         self.find_button.grid(row=1, column=1, padx=20, pady=10)
         self.sort_info = customtkinter.CTkLabel(self.second_frame, text="Sort by")
         self.sort_info.grid(row=2,column=0, padx=20, pady=10)
-        self.sort = customtkinter.CTkComboBox(self.second_frame, values=[" ", "Year", "Title"])
+        self.sort = customtkinter.CTkComboBox(self.second_frame, values=["Default", "Year", "Title", "Genre", "Rating"], command=self.sort)
         self.sort.grid(row=2,column=1, padx=20, pady=10)
-
+        self.load_table(Utils.get_last_respond())
 
         # watchlist
         self.watchlist_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
@@ -89,10 +85,7 @@ class App(customtkinter.CTk):
         self.watchlist.grid(row=1, column=0, padx=20, pady=10)
 
         #addmovie
-        self.fourth_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
-
-        # default frame
-
+        self.add_movie_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
 
         #movieframe
         self.movie_frame = customtkinter.CTkScrollableFrame(self, corner_radius=0, fg_color="transparent")
@@ -126,9 +119,9 @@ class App(customtkinter.CTk):
         else:
             self.watchlist_frame.grid_forget()
         if name == "frame_4":
-            self.fourth_frame.grid(row=0, column=1, sticky="nsew")
+            self.add_movie_frame.grid(row=0, column=1, sticky="nsew")
         else:
-            self.fourth_frame.grid_forget()
+            self.add_movie_frame.grid_forget()
         if name == "movie_frame":
             self.movie_frame.grid(row=0, column=1, sticky="nsew")
         else:
@@ -150,24 +143,21 @@ class App(customtkinter.CTk):
         self.select_frame_by_name("frame_4")
 
     def movie_frame_event(self):
+        self.movie_frame.grid_forget()
+        self.movie_frame = customtkinter.CTkScrollableFrame(self, corner_radius=0, fg_color="transparent")
+        self.movie_frame.grid_columnconfigure(0, weight=1)
         self.select_frame_by_name("movie_frame")
 
-    def change_appearance_mode_event(self, new_appearance_mode):
+    @staticmethod
+    def change_appearance_mode_event(new_appearance_mode):
         customtkinter.set_appearance_mode(new_appearance_mode)
 
     def find_movies(self):
         respond = Utils.find_movie_by_title(self.movie_entry.get())
-        value = [["Title", "Release year", "Genre", "Short description"]]
-        for r in respond:
-            value.append(r.get_values())
-        if self.table is not None:
-            self.table.grid_remove()
-        self.table = CTkTable(self.second_frame, row=len(respond)+1, values=value, wraplength=2000, command=self.movie_id)
-        self.table.grid(row=3, column=0, padx=20, pady=20, columnspan=2)
+        self.load_table(respond)
 
     def display_watchlist(self):
         respond = Utils.get_user_watchlist(self.user)
-        print(len(respond))
         if len(respond) == 0:
             return "Watchlist is empty"
         return respond
@@ -180,14 +170,18 @@ class App(customtkinter.CTk):
         self.year.grid(row=2, column=0, padx=20, pady=10)
         self.genre = customtkinter.CTkLabel(self.movie_frame, text=f"Genre {movie.genre}")
         self.genre.grid(row=3, column=0, padx=20, pady=10)
-        self.button_add = customtkinter.CTkButton(self.movie_frame, text="Add to watchlist", command=self.add_to_watchlist) #TODO working button
+        a = next((x for x in self.user.watch_list if x == movie), None)
+        if a is not None:
+            self.button_add = customtkinter.CTkButton(self.movie_frame, text="Remove from watchlist",
+                                                      command=self.remove_from_watchlist)
+        else:
+            self.button_add = customtkinter.CTkButton(self.movie_frame, text="Add to watchlist", command=self.add_to_watchlist)
         self.button_add.grid(row=4, column=0, padx=20,pady=10)
         self.textbox = customtkinter.CTkTextbox(self.movie_frame, width=400, corner_radius=0)
         self.textbox.grid(row=5, column=0, sticky="nsew")
         self.textbox.insert("0.0", "Some example text!")
-        self.button_review = customtkinter.CTkButton(self.movie_frame, text="Add to watchlist", command=self.post_review)  # TODO working button
+        self.button_review = customtkinter.CTkButton(self.movie_frame, text="Post review", command=self.post_review)
         self.button_review.grid(row=6, column=0, padx=20, pady=10)
-        print(self.user.watch_list)
 
 
     def movie_id(self, row):
@@ -200,3 +194,19 @@ class App(customtkinter.CTk):
 
     def add_to_watchlist(self):
         self.user.add_movie(self.current_movie)
+    def remove_from_watchlist(self):
+        self.user.delete_movie(self.current_movie)
+
+    def sort(self, var):
+        respond = Utils.sort_by(var)
+        self.load_table(respond)
+
+    def load_table(self, respond):
+        value = [["Title", "Release year", "Genre", "Rating"]]
+        for r in respond:
+            value.append(r.get_values()[:-1])
+        if self.table is not None:
+            self.table.grid_remove()
+        self.table = CTkTable(self.second_frame, row=len(respond) + 1, values=value, wraplength=2000,
+                              command=self.movie_id)
+        self.table.grid(row=3, column=0, padx=20, pady=20, columnspan=2)

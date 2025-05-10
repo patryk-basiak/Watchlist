@@ -1,7 +1,8 @@
 class Movie:
     number = 0
-    def __init__(self, title=None, release_year=None, genre_id=None, short_description=None):
+    def __init__(self, title=None, release_year=None, genre_id=None, short_description=None, grade=None):
         self.title = title
+        self.grade=grade
         self.id = Movie.number
         Movie.number += 1
         self.release_year = release_year
@@ -19,7 +20,7 @@ class Movie:
         self.reviews.remove(review)
 
     def get_values(self):
-        return [self.title, self.release_year, self.genre, self.description]
+        return [self.title, self.release_year, self.genre, self.grade, self.description]
 
     def print_reviews(self):
         print(self.title + " reviews: ")
