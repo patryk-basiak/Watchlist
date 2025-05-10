@@ -1,4 +1,6 @@
 import tkinter
+from tkinter import END
+
 import customtkinter
 from CTkTable import *
 
@@ -10,6 +12,9 @@ from Utils import load_data
 class App(customtkinter.CTk):
     def __init__(self, user):
         super().__init__()
+
+
+        self.table = None
         self.user = user
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
@@ -36,13 +41,14 @@ class App(customtkinter.CTk):
                                                           )
         self.find_movies_button.grid(row=2, column=0, sticky="ew")
 
-        self.frame_3_button = customtkinter.CTkButton(self.navigation_frame, corner_radius=0, height=40,
-                                                      border_spacing=10, text="Watchlist",
-                                                      fg_color="transparent", text_color=("gray10", "gray90"),
-                                                      hover_color=("gray70", "gray30"),
-                                                     anchor="w", command=self.frame_3_button_event,
-                                                      )
-        self.frame_3_button.grid(row=3, column=0, sticky="ew")
+        self.watchlist_button = customtkinter.CTkButton(self.navigation_frame, corner_radius=0, height=40,
+                                                        border_spacing=10, text="Watchlist",
+                                                        fg_color="transparent", text_color=("gray10", "gray90"),
+                                                        hover_color=("gray70", "gray30"),
+                                                        anchor="w", command=self.watchlist_event,
+                                                        )
+        self.watchlist_button.grid(row=3, column=0, sticky="ew")
+
         self.frame_4_button = customtkinter.CTkButton(self.navigation_frame, corner_radius=0, height=40,
                                                       border_spacing=10, text="Add movie",
                                                       fg_color="transparent", text_color=("gray10", "gray90"),
@@ -68,27 +74,43 @@ class App(customtkinter.CTk):
         self.second_frame.grid_columnconfigure(0, weight=1)
         self.movie_entry = customtkinter.CTkEntry(self.second_frame)
         self.movie_entry.grid(row=1, column=0, padx=20, pady=10)
-        self.find_button = customtkinter.CTkButton(self.second_frame, command=self.find_movies)
+        self.find_button = customtkinter.CTkButton(self.second_frame, command=self.find_movies, text="Find")
         self.find_button.grid(row=1, column=1, padx=20, pady=10)
+        self.sort_info = customtkinter.CTkLabel(self.second_frame, text="Sort by")
+        self.sort_info.grid(row=2,column=0, padx=20, pady=10)
+        self.sort = customtkinter.CTkComboBox(self.second_frame, values=[" ", "Year", "Title"])
+        self.sort.grid(row=2,column=1, padx=20, pady=10)
 
 
+        # watchlist
+        self.watchlist_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
+        self.watchlist_frame.grid_columnconfigure(0, weight=1)
+        self.watchlist = customtkinter.CTkLabel(self.watchlist_frame, text=self.display_watchlist())
+        self.watchlist.grid(row=1, column=0, padx=20, pady=10)
 
-
-
-        self.third_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
-
+        #addmovie
         self.fourth_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
 
         # default frame
+
+
+        #movieframe
+        self.movie_frame = customtkinter.CTkScrollableFrame(self, corner_radius=0, fg_color="transparent")
+        self.movie_frame.grid_columnconfigure(0, weight=1)
+        self.button_review = None
+        self.button_add = None
+        self.textbox = None
+        self.current_movie = None
         self.select_frame_by_name("home")
 
         self.geometry("1440x480")
         self.title("WatchList")
 
+
     def select_frame_by_name(self, name):
         self.home_button.configure(fg_color=("gray75", "gray25") if name == "home" else "transparent")
         self.find_movies_button.configure(fg_color=("gray75", "gray25") if name == "frame_2" else "transparent")
-        self.frame_3_button.configure(fg_color=("gray75", "gray25") if name == "frame_3" else "transparent")
+        self.watchlist_button.configure(fg_color=("gray75", "gray25") if name == "frame_3" else "transparent")
         self.frame_4_button.configure(fg_color=("gray75", "gray25") if name == "frame_4" else "transparent")
 
         if name == "home":
@@ -100,13 +122,17 @@ class App(customtkinter.CTk):
         else:
             self.second_frame.grid_forget()
         if name == "frame_3":
-            self.third_frame.grid(row=0, column=1, sticky="nsew")
+            self.watchlist_frame.grid(row=0, column=1, sticky="nsew")
         else:
-            self.third_frame.grid_forget()
-        if name == "frame_5":
-            self.third_frame.grid(row=0, column=1, sticky="nsew")
+            self.watchlist_frame.grid_forget()
+        if name == "frame_4":
+            self.fourth_frame.grid(row=0, column=1, sticky="nsew")
         else:
-            self.third_frame.grid_forget()
+            self.fourth_frame.grid_forget()
+        if name == "movie_frame":
+            self.movie_frame.grid(row=0, column=1, sticky="nsew")
+        else:
+            self.movie_frame.grid_forget()
 
     def home_button_event(self):
         self.select_frame_by_name("home")
@@ -114,14 +140,63 @@ class App(customtkinter.CTk):
     def find_movies_event(self):
         self.select_frame_by_name("frame_2")
 
-    def frame_3_button_event(self):
+    def watchlist_event(self):
+        self.watchlist_frame.grid_forget()
+        self.watchlist = customtkinter.CTkLabel(self.watchlist_frame, text=self.display_watchlist())
+        self.watchlist.grid(row=1, column=0, padx=20, pady=10)
         self.select_frame_by_name("frame_3")
+
     def frame_4_button_event(self):
         self.select_frame_by_name("frame_4")
+
+    def movie_frame_event(self):
+        self.select_frame_by_name("movie_frame")
 
     def change_appearance_mode_event(self, new_appearance_mode):
         customtkinter.set_appearance_mode(new_appearance_mode)
 
     def find_movies(self):
-        print(Utils.find_movie(self.movie_entry.get()))
+        respond = Utils.find_movie_by_title(self.movie_entry.get())
+        value = [["Title", "Release year", "Genre", "Short description"]]
+        for r in respond:
+            value.append(r.get_values())
+        if self.table is not None:
+            self.table.grid_remove()
+        self.table = CTkTable(self.second_frame, row=len(respond)+1, values=value, wraplength=2000, command=self.movie_id)
+        self.table.grid(row=3, column=0, padx=20, pady=20, columnspan=2)
 
+    def display_watchlist(self):
+        respond = Utils.get_user_watchlist(self.user)
+        print(len(respond))
+        if len(respond) == 0:
+            return "Watchlist is empty"
+        return respond
+
+    def get_movie_inf(self, movie):
+        self.current_movie = movie
+        self.title1 = customtkinter.CTkLabel(self.movie_frame, text=f"Title {movie.title}")
+        self.title1.grid(row=1, column=0, padx=20, pady=10)
+        self.year = customtkinter.CTkLabel(self.movie_frame, text=f"Release year {movie.release_year}")
+        self.year.grid(row=2, column=0, padx=20, pady=10)
+        self.genre = customtkinter.CTkLabel(self.movie_frame, text=f"Genre {movie.genre}")
+        self.genre.grid(row=3, column=0, padx=20, pady=10)
+        self.button_add = customtkinter.CTkButton(self.movie_frame, text="Add to watchlist", command=self.add_to_watchlist) #TODO working button
+        self.button_add.grid(row=4, column=0, padx=20,pady=10)
+        self.textbox = customtkinter.CTkTextbox(self.movie_frame, width=400, corner_radius=0)
+        self.textbox.grid(row=5, column=0, sticky="nsew")
+        self.textbox.insert("0.0", "Some example text!")
+        self.button_review = customtkinter.CTkButton(self.movie_frame, text="Add to watchlist", command=self.post_review)  # TODO working button
+        self.button_review.grid(row=6, column=0, padx=20, pady=10)
+        print(self.user.watch_list)
+
+
+    def movie_id(self, row):
+        val = list(dict(row).values())[0]
+        self.movie_frame_event()
+        self.get_movie_inf(Utils.get_last_respond()[int(val)-1])
+
+    def post_review(self):
+        print(self.textbox.get('1.0', END))
+
+    def add_to_watchlist(self):
+        self.user.add_movie(self.current_movie)

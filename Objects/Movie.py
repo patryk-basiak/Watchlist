@@ -8,6 +8,7 @@ class Movie:
         self.genre = genre_id
         self.description = short_description
         self.reviews = []
+        self.title_properties = title.split()
     def __str__(self):
         return f"Title: {self.title}\nrelease_year: {self.release_year}, genre: {self.genre}, description: {self.description}"
 
@@ -18,7 +19,7 @@ class Movie:
         self.reviews.remove(review)
 
     def get_values(self):
-        return self.title, self.release_year, self.genre, self.description
+        return [self.title, self.release_year, self.genre, self.description]
 
     def print_reviews(self):
         print(self.title + " reviews: ")
