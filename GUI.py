@@ -4,6 +4,8 @@ import customtkinter
 from CTkTable import *
 
 import Utils
+from Objects.Movie import Movie
+
 
 class App(customtkinter.CTk):
     def __init__(self, user):
@@ -86,6 +88,22 @@ class App(customtkinter.CTk):
 
         #addmovie
         self.add_movie_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
+        self.add_movie_frame.grid_columnconfigure(0, weight=1)
+
+        self.movie_title_entry = customtkinter.CTkEntry(self.add_movie_frame)
+        self.movie_title_entry.grid(row=1, column=0, padx=20, pady=10)
+
+        self.movie_year_entry = customtkinter.CTkEntry(self.add_movie_frame)
+        self.movie_year_entry.grid(row=2, column=0, padx=20, pady=10)
+
+        self.movie_genre_entry = customtkinter.CTkEntry(self.add_movie_frame)
+        self.movie_genre_entry.grid(row=3, column=0, padx=20, pady=10)
+
+        self.movie_description_entry = customtkinter.CTkEntry(self.add_movie_frame)
+        self.movie_description_entry.grid(row=4, column=0, padx=20, pady=10, columnspan=20)
+
+        self.add_movie_button = customtkinter.CTkButton(self.add_movie_frame, command = self.add_movie, text="Add movie")
+        self.add_movie_button.grid(row=5, column=0, padx=20, pady=10)
 
         #movieframe
         self.movie_frame = customtkinter.CTkScrollableFrame(self, corner_radius=0, fg_color="transparent")
@@ -98,6 +116,7 @@ class App(customtkinter.CTk):
 
         self.geometry("1440x480")
         self.title("WatchList")
+
 
 
     def select_frame_by_name(self, name):
@@ -210,3 +229,14 @@ class App(customtkinter.CTk):
         self.table = CTkTable(self.second_frame, row=len(respond) + 1, values=value, wraplength=2000,
                               command=self.movie_id)
         self.table.grid(row=3, column=0, padx=20, pady=20, columnspan=2)
+
+    def add_movie(self):
+        title = self.movie_title_entry.get()
+        year = self.movie_year_entry.get()
+        genre = self.movie_genre_entry.get()
+        description = self.movie_description_entry.get()
+
+        movie = Movie(title, year, genre, description)
+        print(movie)
+
+        Utils.add_movie_object(movie)

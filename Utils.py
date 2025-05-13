@@ -59,3 +59,7 @@ def sort_by(var):
     else:
         val = get_last_respond()
     return val
+
+def add_movie_object(movie):
+    global movie_list
+    movie_list.append(movie)
