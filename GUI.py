@@ -6,11 +6,9 @@ from CTkTable import *
 import Utils
 from Objects.Movie import Movie
 
-
 class App(customtkinter.CTk):
     def __init__(self, user):
         super().__init__()
-
 
         self.table = None
         self.user = user
@@ -88,22 +86,34 @@ class App(customtkinter.CTk):
 
         #addmovie
         self.add_movie_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
-        self.add_movie_frame.grid_columnconfigure(0, weight=1)
+        self.add_movie_frame.grid_columnconfigure(0, weight=20)
+        self.add_movie_frame.grid_columnconfigure(1, weight=25)
+        self.add_movie_frame.grid_columnconfigure(2, weight=30)
+        self.add_movie_frame.grid_columnconfigure(3, weight=35)
 
+        self.label_title = customtkinter.CTkLabel(self.add_movie_frame, text="Title")
+        self.label_title.grid(row=1, column=1, padx=20, pady=10, sticky="e")
         self.movie_title_entry = customtkinter.CTkEntry(self.add_movie_frame)
-        self.movie_title_entry.grid(row=1, column=0, padx=20, pady=10)
+        self.movie_title_entry.grid(row=1, column=2, padx=20, pady=10,sticky="w")
 
+        self.label_year = customtkinter.CTkLabel(self.add_movie_frame, text="Release year")
+        self.label_year.grid(row=2, column=1, padx=20, pady=10, sticky="e",)
         self.movie_year_entry = customtkinter.CTkEntry(self.add_movie_frame)
-        self.movie_year_entry.grid(row=2, column=0, padx=20, pady=10)
+        self.movie_year_entry.grid(row=2, column=2, padx=20, pady=10, sticky="w",columnspan=20)
 
+
+        self.label_genre = customtkinter.CTkLabel(self.add_movie_frame, text="Genre")
+        self.label_genre.grid(row=3, column=1, padx=20, pady=10, sticky="e")
         self.movie_genre_entry = customtkinter.CTkEntry(self.add_movie_frame)
-        self.movie_genre_entry.grid(row=3, column=0, padx=20, pady=10)
+        self.movie_genre_entry.grid(row=3, column=2, padx=20, pady=10, sticky="w")
 
+        self.label_description = customtkinter.CTkLabel(self.add_movie_frame, text="Description")
+        self.label_description.grid(row=4, column=1, padx=20, pady=10, sticky="e")
         self.movie_description_entry = customtkinter.CTkEntry(self.add_movie_frame)
-        self.movie_description_entry.grid(row=4, column=0, padx=20, pady=10, columnspan=20)
+        self.movie_description_entry.grid(row=4, column=2, padx=20, pady=10, sticky = "w")
 
         self.add_movie_button = customtkinter.CTkButton(self.add_movie_frame, command = self.add_movie, text="Add movie")
-        self.add_movie_button.grid(row=5, column=0, padx=20, pady=10)
+        self.add_movie_button.grid(row=5, column=2, padx=20, pady=10, sticky = "w")
 
         #movieframe
         self.movie_frame = customtkinter.CTkScrollableFrame(self, corner_radius=0, fg_color="transparent")
@@ -116,8 +126,6 @@ class App(customtkinter.CTk):
 
         self.geometry("1440x480")
         self.title("WatchList")
-
-
 
     def select_frame_by_name(self, name):
         self.home_button.configure(fg_color=("gray75", "gray25") if name == "home" else "transparent")
@@ -201,7 +209,6 @@ class App(customtkinter.CTk):
         self.textbox.insert("0.0", "Some example text!")
         self.button_review = customtkinter.CTkButton(self.movie_frame, text="Post review", command=self.post_review)
         self.button_review.grid(row=6, column=0, padx=20, pady=10)
-
 
     def movie_id(self, row):
         val = list(dict(row).values())[0]

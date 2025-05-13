@@ -8,6 +8,6 @@ Pulp Fiction;1994;0;"The lives of two mob hitmen, a boxer, a gangster's wife, an
 The Matrix;1999;0;"A computer hacker learns about the true nature of reality and his role in the war against its controllers.";0
 Gladiator;2000;0;"A former Roman General sets out to exact vengeance against the corrupt emperor who murdered his family and sent him into slavery.";5
 Interstellar;2014;0;"A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.";1
-Fast & furious;2000;0;"";2
-Fast & furious 1;2001;0;"";3
+Fast & furious;2000;0;"";5
+Fast & furious 1;2001;0;"";5
 Fast & furious 2;2002;0;"";5
