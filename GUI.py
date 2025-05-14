@@ -1,5 +1,6 @@
+import tkinter
 from tkinter import END
-
+from PIL import Image, ImageTk
 import customtkinter
 from CTkTable import *
 
@@ -126,6 +127,17 @@ class App(customtkinter.CTk):
 
         self.geometry("1440x480")
         self.title("WatchList")
+
+        #logo
+        self.logo = Image.open("Assets/Logo.png")
+        self.ctk_logo = customtkinter.CTkImage(self.logo, size=(125, 26))
+        self.add_logo = customtkinter.CTkLabel(self, image=self.ctk_logo, text="")
+        self.add_logo.grid(row=0, column=0, padx=20, pady=17, sticky = "n")
+
+        #programIcon
+        self.icon = tkinter.PhotoImage(file ="Assets/WatchListIcon.png")
+        self.iconphoto(True, self.icon)
+
 
     def select_frame_by_name(self, name):
         self.home_button.configure(fg_color=("gray75", "gray25") if name == "home" else "transparent")
