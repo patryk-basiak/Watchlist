@@ -7,13 +7,14 @@ def load_data(data):
     with open(data, "r") as file:
         for line in file:
             s = line.split(";")
-            movies.append(Movie(s[0],s[1],Genre.genre_from_id(s[2]),s[3], s[4]))
+            movies.append(Movie(s[0],int(s[1]),Genre.genre_from_id(s[2]),s[3], s[4]))
     return movies
 
 def load_data_from_database():
     # TODO Implement
     pass
-movie_list = load_data('films.txt')
+file = 'films.txt'
+movie_list = load_data(file)
 def find_movie_by_title(title):
     title = title.lower()
     global res
@@ -38,7 +39,10 @@ def get_user_watchlist(user):
 
 def add_movie(title=None, release_year=None, genre_id=None, short_description=None):
     global movie_list
-    movie_list.append(Movie(title, release_year, genre_id, short_description))
+    movie = Movie(title, release_year, genre_id, short_description)
+    movie_list.append(movie)
+    save_movie(movie)
+
 def get_movie_list():
     return movie_list
 def get_last_respond():
@@ -63,3 +67,10 @@ def sort_by(var):
 def add_movie_object(movie):
     global movie_list
     movie_list.append(movie)
+    save_movie(movie)
+
+def save_movie(movie):
+    global file
+    with open("test.txt", "a") as file:
+        file.write(';'.join(movie.get_values()))
+    print("Movie save to txt file")

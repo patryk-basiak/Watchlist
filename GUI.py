@@ -5,12 +5,16 @@ import customtkinter
 from CTkTable import *
 
 import Utils
+from Objects.Errors import EmptyEntry
 from Objects.Movie import Movie
+from Objects.Review import Review
+
 
 class App(customtkinter.CTk):
     def __init__(self, user):
         super().__init__()
 
+        self.rating_slider = None
         self.table = None
         self.user = user
         self.grid_rowconfigure(0, weight=1)
@@ -171,6 +175,7 @@ class App(customtkinter.CTk):
         self.select_frame_by_name("home")
 
     def find_movies_event(self):
+        self.load_table(Utils.get_movie_list())
         self.select_frame_by_name("frame_2")
 
     def watchlist_event(self):
@@ -261,6 +266,11 @@ class App(customtkinter.CTk):
                                                      font=customtkinter.CTkFont(size=15, weight="bold"))
         self.button_review.grid(row=8, column=0, padx=20, pady=10, sticky="ew", columnspan=3)
 
+        for i, x in enumerate(self.current_movie.reviews):
+            self.review = customtkinter.CTkLabel(self.movie_frame, text=f"{x.user}, {x.text}, {int(x.rating)}, {x.date}",
+                                                  font=customtkinter.CTkFont(size=14))
+            self.review.grid(row=8 + i, column=0, sticky="we", columnspan=3, padx=20, pady=10)
+
     def movie_id(self, row):
         val = int(list(dict(row).values())[0])
         if val < 1:
@@ -269,7 +279,9 @@ class App(customtkinter.CTk):
         self.get_movie_inf(Utils.get_last_respond()[val-1])
 
     def post_review(self):
-        print(self.textbox.get('1.0', END))
+        rew = Review(self.user,self.current_movie, self.textbox.get('1.0', END), self.rating_slider.get())
+        self.current_movie.add_review(rew)
+
 
     def add_to_watchlist(self):
         self.user.add_movie(self.current_movie)
@@ -298,9 +310,10 @@ class App(customtkinter.CTk):
         year = self.movie_year_entry.get()
         genre = self.movie_genre_entry.get()
         description = self.movie_description_entry.get("1.0", "end").strip()
-
-        movie = Movie(title, year, genre, description)
-        print(movie)
+        try:
+            movie = Movie(title, year, genre, description)
+        except (TypeError, EmptyEntry) as e:
+            return #TODO
 
         Utils.add_movie_object(movie)
 

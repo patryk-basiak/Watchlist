@@ -1,6 +1,9 @@
+from Objects.Errors import EmptyEntry
+
+
 class Movie:
     number = 0
-    def __init__(self, title=None, release_year=None, genre_id=None, short_description=None, grade=None):
+    def __init__(self, title, release_year, genre_id=None, short_description=None, grade=None):
         self.title = title
         self.grade=grade
         self.id = Movie.number
@@ -10,6 +13,13 @@ class Movie:
         self.description = short_description
         self.reviews = []
         self.title_properties = title.split()
+
+    @property
+    def title(self):
+        return self._title
+    @property
+    def release_year(self):
+        return self._release_year
     def __str__(self):
         return f"Title: {self.title}\nrelease_year: {self.release_year}, genre: {self.genre}, description: {self.description}"
 
@@ -26,3 +36,18 @@ class Movie:
         print(self.title + " reviews: ")
         for review in self.reviews:
             print(f"ID: {review.id} User: {review.user}, rating: {review.rating}, text: {review.text}")
+
+    @title.setter
+    def title(self, value):
+        if len(value) == 0:
+            raise EmptyEntry("Title is null")
+        self._title = value
+
+    @release_year.setter
+    def release_year(self, value):
+        try:
+            int(value)
+        except TypeError:
+            raise TypeError
+
+        self._release_year = int(value)
