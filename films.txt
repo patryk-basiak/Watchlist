@@ -11,3 +11,103 @@ Interstellar;2014;0;"A team of explorers travel through a wormhole in space in a
 Fast & furious;2000;0;"";5
 Fast & furious 1;2001;0;"";5
 Fast & furious 2;2002;0;"";5
+Cast Away;2000;0;"A FedEx employee survives a plane crash and lives on a deserted island.";1
+Life of Pi;2012;0;"A young man survives a shipwreck with a Bengal tiger.";1
+Doctor Strange;2016;0;"A neurosurgeon discovers a hidden world of magic and alternate dimensions.";4
+Her;2013;0;"A man falls in love with an intelligent operating system.";0
+The Social Network;2010;0;"The founding of Facebook and the resulting lawsuits.";1
+Ex Machina;2014;0;"A programmer is invited to test a humanoid robot's intelligence.";0
+Whiplash;2014;0;"A young drummer enrolls in a cutthroat music conservatory.";4
+Soul;2020;0;"A musician has an out-of-body experience and seeks to reunite with his soul.";3
+Django Unchained;2012;0;"A freed slave sets out to rescue his wife from a brutal plantation owner.";1
+Spider-Man: No Way Home;2021;0;"Peter Parker's identity is revealed, leading to multiverse chaos.";4
+Joker;2019;0;"A failed comedian descends into madness and becomes the Joker.";5
+Star Wars: Episode V - The Empire Strikes Back;1980;0;"Darth Vader relentlessly pursues the Rebels after their defeat.";2
+The Departed;2006;0;"An undercover cop and a mole in the police try to identify each other.";4
+The Curious Case of Benjamin Button;2008;0;"A man ages in reverse and experiences life backwards.";0
+The Green Mile;1999;0;"A death row guard discovers a prisoner's miraculous powers.";1
+Cast Away;2000;0;"A FedEx employee survives a plane crash and lives on a deserted island.";5
+Soul;2020;0;"A musician has an out-of-body experience and seeks to reunite with his soul.";3
+Soul;2020;0;"A musician has an out-of-body experience and seeks to reunite with his soul.";2
+Doctor Strange;2016;0;"A neurosurgeon discovers a hidden world of magic and alternate dimensions.";0
+Avengers: Endgame;2019;0;"The Avengers assemble once more to reverse Thanos' actions.";5
+Star Wars: Episode IV - A New Hope;1977;0;"Luke Skywalker joins forces to save the galaxy from the Empire.";1
+Gone Girl;2014;0;"A man becomes the prime suspect when his wife disappears.";3
+Life of Pi;2012;0;"A young man survives a shipwreck with a Bengal tiger.";1
+The Grand Budapest Hotel;2014;0;"A concierge and his protégé become involved in a murder mystery.";3
+Catch Me If You Can;2002;0;"A con artist eludes an FBI agent for years.";0
+Slumdog Millionaire;2008;0;"An orphan from Mumbai becomes a game show contestant.";2
+Monsters, Inc.;2001;0;"Monsters generate power by scaring children, but one becomes attached.";1
+Django Unchained;2012;0;"A freed slave sets out to rescue his wife from a brutal plantation owner.";5
+Schindler's List;1993;0;"A businessman saves Jewish lives during the Holocaust.";0
+The Green Mile;1999;0;"A death row guard discovers a prisoner's miraculous powers.";3
+The Green Mile;1999;0;"A death row guard discovers a prisoner's miraculous powers.";3
+The Lord of the Rings: The Fellowship of the Ring;2001;0;"A meek Hobbit sets out on a journey to destroy a powerful ring.";2
+The Prestige;2006;0;"Two magicians engage in a bitter rivalry.";3
+Slumdog Millionaire;2008;0;"An orphan from Mumbai becomes a game show contestant.";1
+Black Panther;2018;0;"T'Challa returns home to Wakanda to take his rightful place as king.";2
+Goodfellas;1990;0;"The rise and fall of a mob associate in the 1950s-80s.";3
+Mad Max: Fury Road;2015;0;"A woman rebels against a tyrant in a post-apocalyptic world.";5
+Ratatouille;2007;0;"A rat who dreams of becoming a chef teams up with a human.";2
+Slumdog Millionaire;2008;0;"An orphan from Mumbai becomes a game show contestant.";3
+The Lord of the Rings: The Two Towers;2002;0;"The fellowship is broken but continues its quest to defeat Sauron.";5
+Schindler's List;1993;0;"A businessman saves Jewish lives during the Holocaust.";5
+Ratatouille;2007;0;"A rat who dreams of becoming a chef teams up with a human.";4
+Star Wars: Episode IV - A New Hope;1977;0;"Luke Skywalker joins forces to save the galaxy from the Empire.";3
+Django Unchained;2012;0;"A freed slave sets out to rescue his wife from a brutal plantation owner.";5
+The Lord of the Rings: The Two Towers;2002;0;"The fellowship is broken but continues its quest to defeat Sauron.";2
+Gone Girl;2014;0;"A man becomes the prime suspect when his wife disappears.";1
+A Beautiful Mind;2001;0;"A brilliant but troubled mathematician struggles with schizophrenia.";5
+Schindler's List;1993;0;"A businessman saves Jewish lives during the Holocaust.";1
+The Lord of the Rings: The Two Towers;2002;0;"The fellowship is broken but continues its quest to defeat Sauron.";4
+The Lord of the Rings: The Fellowship of the Ring;2001;0;"A meek Hobbit sets out on a journey to destroy a powerful ring.";2
+The Prestige;2006;0;"Two magicians engage in a bitter rivalry.";4
+The Grand Budapest Hotel;2014;0;"A concierge and his protégé become involved in a murder mystery.";0
+The Lion King;1994;0;"A lion cub flees his kingdom after the murder of his father.";2
+Catch Me If You Can;2002;0;"A con artist eludes an FBI agent for years.";1
+Star Wars: Episode IV - A New Hope;1977;0;"Luke Skywalker joins forces to save the galaxy from the Empire.";3
+Ratatouille;2007;0;"A rat who dreams of becoming a chef teams up with a human.";0
+WALL·E;2008;0;"A small waste-collecting robot inadvertently embarks on a space journey.";3
+Soul;2020;0;"A musician has an out-of-body experience and seeks to reunite with his soul.";2
+Iron Man;2008;0;"A billionaire industrialist and genius inventor is kidnapped and builds a high-tech suit to escape.";0
+WALL·E;2008;0;"A small waste-collecting robot inadvertently embarks on a space journey.";2
+Inside Out;2015;0;"A young girl’s emotions come to life.";4
+The Prestige;2006;0;"Two magicians engage in a bitter rivalry.";5
+The Green Mile;1999;0;"A death row guard discovers a prisoner's miraculous powers.";3
+Goodfellas;1990;0;"The rise and fall of a mob associate in the 1950s-80s.";3
+Cast Away;2000;0;"A FedEx employee survives a plane crash and lives on a deserted island.";2
+Inside Out;2015;0;"A young girl’s emotions come to life.";4
+Her;2013;0;"A man falls in love with an intelligent operating system.";1
+Catch Me If You Can;2002;0;"A con artist eludes an FBI agent for years.";1
+Star Wars: Episode VI - Return of the Jedi;1983;0;"The Rebels attempt to destroy the second Death Star.";3
+Schindler's List;1993;0;"A businessman saves Jewish lives during the Holocaust.";2
+Fight Club;1999;0;"An office worker and a soap salesman build a global organization to help vent male aggression.";4
+Star Wars: Episode V - The Empire Strikes Back;1980;0;"Darth Vader relentlessly pursues the Rebels after their defeat.";1
+Toy Story;1995;0;"A cowboy doll feels threatened by a new spaceman toy.";5
+Star Wars: Episode V - The Empire Strikes Back;1980;0;"Darth Vader relentlessly pursues the Rebels after their defeat.";4
+Joker;2019;0;"A failed comedian descends into madness and becomes the Joker.";1
+The Grand Budapest Hotel;2014;0;"A concierge and his protégé become involved in a murder mystery.";3
+The Lord of the Rings: The Two Towers;2002;0;"The fellowship is broken but continues its quest to defeat Sauron.";0
+A Beautiful Mind;2001;0;"A brilliant but troubled mathematician struggles with schizophrenia.";5
+Django Unchained;2012;0;"A freed slave sets out to rescue his wife from a brutal plantation owner.";2
+Captain America: The First Avenger;2011;0;"Steve Rogers becomes the iconic superhero after being enhanced by a serum.";4
+Cast Away;2000;0;"A FedEx employee survives a plane crash and lives on a deserted island.";1
+The Curious Case of Benjamin Button;2008;0;"A man ages in reverse and experiences life backwards.";0
+Iron Man;2008;0;"A billionaire industrialist and genius inventor is kidnapped and builds a high-tech suit to escape.";3
+The Revenant;2015;0;"A frontiersman fights for survival after being left for dead.";1
+The Social Network;2010;0;"The founding of Facebook and the resulting lawsuits.";0
+Cast Away;2000;0;"A FedEx employee survives a plane crash and lives on a deserted island.";0
+The Grand Budapest Hotel;2014;0;"A concierge and his protégé become involved in a murder mystery.";3
+Ratatouille;2007;0;"A rat who dreams of becoming a chef teams up with a human.";3
+The Departed;2006;0;"An undercover cop and a mole in the police try to identify each other.";3
+Her;2013;0;"A man falls in love with an intelligent operating system.";3
+Up;2009;0;"An old man ties thousands of balloons to his house to see the world.";0
+Ratatouille;2007;0;"A rat who dreams of becoming a chef teams up with a human.";5
+Slumdog Millionaire;2008;0;"An orphan from Mumbai becomes a game show contestant.";2
+Schindler's List;1993;0;"A businessman saves Jewish lives during the Holocaust.";4
+Schindler's List;1993;0;"A businessman saves Jewish lives during the Holocaust.";3
+The Prestige;2006;0;"Two magicians engage in a bitter rivalry.";5
+Schindler's List;1993;0;"A businessman saves Jewish lives during the Holocaust.";1
+The Green Mile;1999;0;"A death row guard discovers a prisoner's miraculous powers.";1
+The Lord of the Rings: The Fellowship of the Ring;2001;0;"A meek Hobbit sets out on a journey to destroy a powerful ring.";1
+Catch Me If You Can;2002;0;"A con artist eludes an FBI agent for years.";0

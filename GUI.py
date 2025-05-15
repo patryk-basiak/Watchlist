@@ -95,34 +95,34 @@ class App(customtkinter.CTk):
 
         #addmovie
         self.add_movie_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
-        self.add_movie_frame.grid_columnconfigure(0, weight=20)
-        self.add_movie_frame.grid_columnconfigure(1, weight=25)
-        self.add_movie_frame.grid_columnconfigure(2, weight=30)
-        self.add_movie_frame.grid_columnconfigure(3, weight=35)
+        self.add_movie_frame.grid_columnconfigure(0, weight=1)
+        self.add_movie_frame.grid_columnconfigure(1, weight=1)
+        self.add_movie_frame.grid_columnconfigure(2, weight=1)
+        self.add_movie_frame.grid_columnconfigure(3, weight=1)
 
-        self.label_title = customtkinter.CTkLabel(self.add_movie_frame, text="Title")
-        self.label_title.grid(row=1, column=1, padx=20, pady=10, sticky="e")
+        self.label_title = customtkinter.CTkLabel(self.add_movie_frame, text="Title", font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.label_title.grid(row=1, column=1, padx=20, pady=10, sticky="ew")
         self.movie_title_entry = customtkinter.CTkEntry(self.add_movie_frame)
-        self.movie_title_entry.grid(row=1, column=2, padx=20, pady=10,sticky="w")
+        self.movie_title_entry.grid(row=1, column=2, padx=20, pady=10,sticky="ew")
 
-        self.label_year = customtkinter.CTkLabel(self.add_movie_frame, text="Release year")
-        self.label_year.grid(row=2, column=1, padx=20, pady=10, sticky="e",)
+        self.label_year = customtkinter.CTkLabel(self.add_movie_frame, text="Release year", font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.label_year.grid(row=2, column=1, padx=20, pady=10, sticky="ew",)
         self.movie_year_entry = customtkinter.CTkEntry(self.add_movie_frame)
-        self.movie_year_entry.grid(row=2, column=2, padx=20, pady=10, sticky="w",columnspan=20)
+        self.movie_year_entry.grid(row=2, column=2, padx=20, pady=10, sticky="ew")
 
 
-        self.label_genre = customtkinter.CTkLabel(self.add_movie_frame, text="Genre")
-        self.label_genre.grid(row=3, column=1, padx=20, pady=10, sticky="e")
+        self.label_genre = customtkinter.CTkLabel(self.add_movie_frame, text="Genre", font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.label_genre.grid(row=3, column=1, padx=20, pady=10, sticky="ew")
         self.movie_genre_entry = customtkinter.CTkEntry(self.add_movie_frame)
-        self.movie_genre_entry.grid(row=3, column=2, padx=20, pady=10, sticky="w")
+        self.movie_genre_entry.grid(row=3, column=2, padx=20, pady=10, sticky="ew")
 
-        self.label_description = customtkinter.CTkLabel(self.add_movie_frame, text="Description")
-        self.label_description.grid(row=4, column=1, padx=20, pady=10, sticky="e")
-        self.movie_description_entry = customtkinter.CTkEntry(self.add_movie_frame)
-        self.movie_description_entry.grid(row=4, column=2, padx=20, pady=10, sticky = "w")
+        self.label_description = customtkinter.CTkLabel(self.add_movie_frame, text="Description", font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.label_description.grid(row=4, column=1, padx=20, pady=40, sticky="nsew")
+        self.movie_description_entry = customtkinter.CTkTextbox(self.add_movie_frame, height=100)
+        self.movie_description_entry.grid(row=4, column=2, padx=20, pady=10, sticky = "nsew", rowspan=2)
 
-        self.add_movie_button = customtkinter.CTkButton(self.add_movie_frame, command = self.add_movie, text="Add movie")
-        self.add_movie_button.grid(row=5, column=2, padx=20, pady=10, sticky = "w")
+        self.add_movie_button = customtkinter.CTkButton(self.add_movie_frame, command = self.add_movie, text="Add movie", font=customtkinter.CTkFont(size=15, weight="bold"))
+        self.add_movie_button.grid(row=7, column=1, padx=20, pady=10, sticky = "ew", columnspan=2)
 
         #movieframe
         self.movie_frame = customtkinter.CTkScrollableFrame(self, corner_radius=0, fg_color="transparent")
@@ -264,7 +264,7 @@ class App(customtkinter.CTk):
         title = self.movie_title_entry.get()
         year = self.movie_year_entry.get()
         genre = self.movie_genre_entry.get()
-        description = self.movie_description_entry.get()
+        description = self.movie_description_entry.get("1.0", "end").strip()
 
         movie = Movie(title, year, genre, description)
         print(movie)
