@@ -68,16 +68,24 @@ class App(customtkinter.CTk):
 
         #find movies
         self.second_frame = customtkinter.CTkScrollableFrame(self, corner_radius=0, fg_color="transparent")
-        self.second_frame.grid_columnconfigure(0, weight=1)
-        self.movie_entry = customtkinter.CTkEntry(self.second_frame)
-        self.movie_entry.grid(row=1, column=0, padx=20, pady=10)
-        self.find_button = customtkinter.CTkButton(self.second_frame, command=self.find_movies, text="Find")
-        self.find_button.grid(row=1, column=1, padx=20, pady=10)
-        self.sort_info = customtkinter.CTkLabel(self.second_frame, text="Sort by")
-        self.sort_info.grid(row=2,column=0, padx=20, pady=10)
+        self.second_frame.grid_columnconfigure(0,weight=1)
+        self.second_frame.grid_columnconfigure(1,weight=1)
+        self.second_frame.grid_columnconfigure(2,weight=1)
+
+        self.movie_entry = customtkinter.CTkEntry(self.second_frame, width=700)
+        self.movie_entry.grid(row=1, column=1, padx=20, pady=10,sticky="ew")
+
+        self.find_button = customtkinter.CTkButton(self.second_frame, command=self.find_movies, text="Find", font=customtkinter.CTkFont(size=15, weight="bold"), width=100)
+        self.find_button.grid(row=1, column=2, padx=20, pady=10, sticky="ew")
+
+        self.sort_info = customtkinter.CTkLabel(self.second_frame, text="Sort by", font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.sort_info.grid(row=2,column=2, padx=20, pady=10, sticky="s")
+
         self.sort = customtkinter.CTkComboBox(self.second_frame, values=["Default", "Year", "Title", "Genre", "Rating"], command=self.sort)
-        self.sort.grid(row=2,column=1, padx=20, pady=10)
+        self.sort.grid(row=3,column=2, padx=20, pady=10, sticky="new")
+
         self.load_table(Utils.get_last_respond())
+
 
         # watchlist
         self.watchlist_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
@@ -240,6 +248,9 @@ class App(customtkinter.CTk):
         self.load_table(respond)
 
     def load_table(self, respond):
+        self.second_frame.grid_columnconfigure(0, weight=1)
+        self.second_frame.grid_columnconfigure(1, weight=1)
+        self.second_frame.grid_columnconfigure(2, weight=1)
         value = [["Title", "Release year", "Genre", "Rating"]]
         for r in respond:
             value.append(r.get_values()[:-1])
@@ -247,7 +258,7 @@ class App(customtkinter.CTk):
             self.table.grid_remove()
         self.table = CTkTable(self.second_frame, row=len(respond) + 1, values=value, wraplength=2000,
                               command=self.movie_id)
-        self.table.grid(row=3, column=0, padx=20, pady=20, columnspan=2)
+        self.table.grid(row=3, column=0, padx=20, pady=20, columnspan=2, sticky="we")
 
     def add_movie(self):
         title = self.movie_title_entry.get()
