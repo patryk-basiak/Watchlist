@@ -55,7 +55,7 @@ class App(customtkinter.CTk):
         self.frame_4_button.grid(row=4, column=0, sticky="ew")
 
         self.appearance_mode_menu = customtkinter.CTkOptionMenu(self.navigation_frame,
-                                                                values=["Dark", "Light", "System"],
+                                                                values=["System", "Light", "Dark"],
                                                                 command=self.change_appearance_mode_event)
         self.appearance_mode_menu.grid(row=6, column=0, padx=20, pady=20, sticky="s")
         # home
@@ -86,7 +86,6 @@ class App(customtkinter.CTk):
 
         self.load_table(Utils.get_last_respond())
 
-
         # watchlist
         self.watchlist_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
         self.watchlist_frame.grid_columnconfigure(0, weight=1)
@@ -101,23 +100,22 @@ class App(customtkinter.CTk):
         self.add_movie_frame.grid_columnconfigure(3, weight=1)
 
         self.label_title = customtkinter.CTkLabel(self.add_movie_frame, text="Title", font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.label_title.grid(row=1, column=1, padx=20, pady=10, sticky="ew")
+        self.label_title.grid(row=1, column=1, padx=100, pady=10, sticky="e")
         self.movie_title_entry = customtkinter.CTkEntry(self.add_movie_frame)
         self.movie_title_entry.grid(row=1, column=2, padx=20, pady=10,sticky="ew")
 
-        self.label_year = customtkinter.CTkLabel(self.add_movie_frame, text="Release year", font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.label_year.grid(row=2, column=1, padx=20, pady=10, sticky="ew",)
-        self.movie_year_entry = customtkinter.CTkEntry(self.add_movie_frame)
-        self.movie_year_entry.grid(row=2, column=2, padx=20, pady=10, sticky="ew")
-
-
         self.label_genre = customtkinter.CTkLabel(self.add_movie_frame, text="Genre", font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.label_genre.grid(row=3, column=1, padx=20, pady=10, sticky="ew")
+        self.label_genre.grid(row=2, column=1, padx=85, pady=10, sticky="e")
         self.movie_genre_entry = customtkinter.CTkEntry(self.add_movie_frame)
-        self.movie_genre_entry.grid(row=3, column=2, padx=20, pady=10, sticky="ew")
+        self.movie_genre_entry.grid(row=2, column=2, padx=20, pady=10, sticky="ew")
+
+        self.label_year = customtkinter.CTkLabel(self.add_movie_frame, text="Release year", font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.label_year.grid(row=3, column=1, padx=18, pady=10, sticky="e",)
+        self.movie_year_entry = customtkinter.CTkEntry(self.add_movie_frame)
+        self.movie_year_entry.grid(row=3, column=2, padx=20, pady=10, sticky="ew")
 
         self.label_description = customtkinter.CTkLabel(self.add_movie_frame, text="Description", font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.label_description.grid(row=4, column=1, padx=20, pady=40, sticky="nsew")
+        self.label_description.grid(row=4, column=1, padx=30, pady=40, sticky="nse")
         self.movie_description_entry = customtkinter.CTkTextbox(self.add_movie_frame, height=100)
         self.movie_description_entry.grid(row=4, column=2, padx=20, pady=10, sticky = "nsew", rowspan=2)
 
@@ -126,11 +124,6 @@ class App(customtkinter.CTk):
 
         #movieframe
         self.movie_frame = customtkinter.CTkScrollableFrame(self, corner_radius=0, fg_color="transparent")
-        self.movie_frame.grid_columnconfigure(0, weight=1)
-        self.button_review = None
-        self.button_add = None
-        self.textbox = None
-        self.current_movie = None
         self.select_frame_by_name("home")
 
         self.geometry("1440x480")
@@ -211,25 +204,62 @@ class App(customtkinter.CTk):
         return respond
 
     def get_movie_inf(self, movie):
+        self.movie_frame.grid_columnconfigure(0, weight=1)
+        self.movie_frame.grid_columnconfigure(1, weight=1)
+        self.movie_frame.grid_columnconfigure(2, weight=1)
         self.current_movie = movie
-        self.title1 = customtkinter.CTkLabel(self.movie_frame, text=f"Title {movie.title}")
-        self.title1.grid(row=1, column=0, padx=20, pady=10)
-        self.year = customtkinter.CTkLabel(self.movie_frame, text=f"Release year {movie.release_year}")
-        self.year.grid(row=2, column=0, padx=20, pady=10)
-        self.genre = customtkinter.CTkLabel(self.movie_frame, text=f"Genre {movie.genre}")
-        self.genre.grid(row=3, column=0, padx=20, pady=10)
+
+        self.title1 = customtkinter.CTkLabel(self.movie_frame, text=f"Title: {movie.title}",
+                                             font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.title1.grid(row=1, column=0, padx=20, pady=10, sticky="nsew", columnspan=3)
+
+        self.year = customtkinter.CTkLabel(self.movie_frame, text=f"Release year: {movie.release_year}",
+                                           font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.year.grid(row=2, column=0, padx=20, pady=10, sticky="nsew", columnspan=3)
+
+        self.genre = customtkinter.CTkLabel(self.movie_frame, text=f"Genre: {movie.genre}",
+                                            font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.genre.grid(row=3, column=0, padx=20, pady=10, sticky="nsew", columnspan=3)
+
         a = next((x for x in self.user.watch_list if x == movie), None)
         if a is not None:
             self.button_add = customtkinter.CTkButton(self.movie_frame, text="Remove from watchlist",
-                                                      command=self.remove_from_watchlist)
+                                                      command=self.remove_from_watchlist,
+                                                      font=customtkinter.CTkFont(size=15, weight="bold"))
         else:
-            self.button_add = customtkinter.CTkButton(self.movie_frame, text="Add to watchlist", command=self.add_to_watchlist)
-        self.button_add.grid(row=4, column=0, padx=20,pady=10)
-        self.textbox = customtkinter.CTkTextbox(self.movie_frame, width=400, corner_radius=0)
-        self.textbox.grid(row=5, column=0, sticky="nsew")
-        self.textbox.insert("0.0", "Some example text!")
-        self.button_review = customtkinter.CTkButton(self.movie_frame, text="Post review", command=self.post_review)
-        self.button_review.grid(row=6, column=0, padx=20, pady=10)
+            self.button_add = customtkinter.CTkButton(self.movie_frame, text="Add to watchlist",
+                                                      command=self.add_to_watchlist,
+                                                      font=customtkinter.CTkFont(size=15, weight="bold"))
+        self.button_add.grid(row=4, column=0, padx=20,pady=10, sticky="",columnspan=3)
+
+
+        self.rating_slider = customtkinter.CTkSlider(self.movie_frame, from_=0, to=5, number_of_steps=5,
+                                                     command=self.update_stars,height=80, width=100,
+                                                        progress_color="#242424",
+                                                        fg_color="#242424",
+                                                        button_color="#242424",
+                                                        button_hover_color="#242424")
+        self.rating_slider.set(3)
+        self.rating_slider.grid(row=5, column=1, padx=15, pady=0, sticky="s")
+
+        self.stars_label = customtkinter.CTkLabel(self.movie_frame, text="★★★☆☆",
+                                                  font=customtkinter.CTkFont(size=20, weight="bold"),
+                                                  text_color="#FFD700")
+        self.stars_label.grid(row=5, column=1, padx=20, pady=0, sticky="s")
+
+        # self.blank_row = customtkinter.CTkLabel(self.movie_frame, text="", font=customtkinter.CTkFont(size=20, weight="bold"))
+        # self.blank_row.grid(row=6, column=0, padx=20, pady=10, sticky="w")
+
+
+        self.rating = customtkinter.CTk
+
+        self.textbox = customtkinter.CTkTextbox(self.movie_frame, width=400, corner_radius=0, height=150)
+        self.textbox.grid(row=7, column=0, sticky="we", columnspan=3, padx=20, pady=10)
+        self.textbox.insert("0.0", "Give us your feedback about this movie!")
+
+        self.button_review = customtkinter.CTkButton(self.movie_frame, text="Post review", command=self.post_review,
+                                                     font=customtkinter.CTkFont(size=15, weight="bold"))
+        self.button_review.grid(row=8, column=0, padx=20, pady=10, sticky="ew", columnspan=3)
 
     def movie_id(self, row):
         val = int(list(dict(row).values())[0])
@@ -273,3 +303,9 @@ class App(customtkinter.CTk):
         print(movie)
 
         Utils.add_movie_object(movie)
+
+    def update_stars(self, value):
+        full_stars = int(float(value))
+        empty_stars = 5 - full_stars
+        stars_text = "★" * full_stars + "☆" * empty_stars
+        self.stars_label.configure(text=stars_text)
