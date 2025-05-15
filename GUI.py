@@ -232,9 +232,11 @@ class App(customtkinter.CTk):
         self.button_review.grid(row=6, column=0, padx=20, pady=10)
 
     def movie_id(self, row):
-        val = list(dict(row).values())[0]
+        val = int(list(dict(row).values())[0])
+        if val < 1:
+            return
         self.movie_frame_event()
-        self.get_movie_inf(Utils.get_last_respond()[int(val)-1])
+        self.get_movie_inf(Utils.get_last_respond()[val-1])
 
     def post_review(self):
         print(self.textbox.get('1.0', END))
