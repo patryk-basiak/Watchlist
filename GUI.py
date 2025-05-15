@@ -200,6 +200,7 @@ class App(customtkinter.CTk):
         customtkinter.set_appearance_mode(new_appearance_mode)
 
     def find_movies(self):
+        self.bind("<Return>", lambda event: self.find_movies())
         respond = Utils.find_movie_by_title(self.movie_entry.get())
         self.load_table(respond)
 
