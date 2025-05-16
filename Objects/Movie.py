@@ -1,3 +1,5 @@
+import datetime
+
 from Objects.Errors import EmptyEntry
 
 
@@ -17,9 +19,11 @@ class Movie:
     @property
     def title(self):
         return self._title
+
     @property
     def release_year(self):
         return self._release_year
+
     def __str__(self):
         return f"Title: {self.title}\nrelease_year: {self.release_year}, genre: {self.genre}, description: {self.description}"
 
@@ -49,5 +53,7 @@ class Movie:
             int(value)
         except TypeError:
             raise TypeError
-
-        self._release_year = int(value)
+        new_value = int(value)
+        if new_value > datetime.datetime.now().year:
+            raise ValueError
+        self._release_year = new_value

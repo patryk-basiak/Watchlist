@@ -3,7 +3,7 @@ from tkinter import END
 from PIL import Image, ImageTk
 import customtkinter
 from CTkTable import *
-
+from CTkFloatingNotifications import NotificationManager, NotifyType
 import Utils
 from Objects.Errors import EmptyEntry
 from Objects.Movie import Movie
@@ -13,7 +13,7 @@ from Objects.Review import Review
 class App(customtkinter.CTk):
     def __init__(self, user):
         super().__init__()
-
+        self.notification_manager = NotificationManager(self)
         self.rating_slider = None
         self.table = None
         self.user = user
@@ -314,9 +314,12 @@ class App(customtkinter.CTk):
             movie = Movie(title, year, genre, description)
         except (TypeError, EmptyEntry) as e:
             return #TODO
-
-        Utils.add_movie_object(movie)
-
+        try:
+            Utils.add_movie_object(movie)
+        except:
+            return #TODO
+        self.notification_manager.show_notification(
+            "Movie added", NotifyType.SUCCESS),
     def update_stars(self, value):
         full_stars = int(float(value))
         empty_stars = 5 - full_stars
