@@ -1,5 +1,4 @@
 import datetime
-
 from Objects.Errors import EmptyEntry
 
 

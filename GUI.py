@@ -85,7 +85,7 @@ class App(customtkinter.CTk):
         self.sort_info = customtkinter.CTkLabel(self.second_frame, text="Sort by", font=customtkinter.CTkFont(size=20, weight="bold"))
         self.sort_info.grid(row=2,column=2, padx=20, pady=10, sticky="s")
 
-        self.sort = customtkinter.CTkComboBox(self.second_frame, values=["Default", "Year", "Title", "Genre", "Rating"], command=self.sort)
+        self.sort = customtkinter.CTkComboBox(self.second_frame, values=["Default","Director", "Year", "Title", "Genre", "Rating"], command=self.sort)
         self.sort.grid(row=3,column=2, padx=20, pady=10, sticky="new")
 
         self.load_table(Utils.get_last_respond())
@@ -252,10 +252,6 @@ class App(customtkinter.CTk):
                                                   text_color="#FFD700")
         self.stars_label.grid(row=5, column=1, padx=20, pady=0, sticky="s")
 
-        # self.blank_row = customtkinter.CTkLabel(self.movie_frame, text="", font=customtkinter.CTkFont(size=20, weight="bold"))
-        # self.blank_row.grid(row=6, column=0, padx=20, pady=10, sticky="w")
-
-
         self.rating = customtkinter.CTk
 
         self.textbox = customtkinter.CTkTextbox(self.movie_frame, width=400, corner_radius=0, height=150)
@@ -296,7 +292,7 @@ class App(customtkinter.CTk):
         self.second_frame.grid_columnconfigure(0, weight=1)
         self.second_frame.grid_columnconfigure(1, weight=1)
         self.second_frame.grid_columnconfigure(2, weight=1)
-        value = [["Title", "Release year", "Genre", "Rating"]]
+        value = [["Title","Director", "Release year", "Genre", "Rating"]]
         for r in respond:
             value.append(r.get_values()[:-1])
         if self.table is not None:
@@ -320,6 +316,7 @@ class App(customtkinter.CTk):
             return #TODO
         self.notification_manager.show_notification(
             "Movie added", NotifyType.SUCCESS),
+
     def update_stars(self, value):
         full_stars = int(float(value))
         empty_stars = 5 - full_stars

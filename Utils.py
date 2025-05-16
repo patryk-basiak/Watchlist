@@ -1,6 +1,7 @@
+import shutil
+import sqlite3
 from Objects.Genre import Genre
 from Objects.Movie import Movie
-
 res = None
 
 
@@ -14,12 +15,38 @@ def load_data(data):
 
 
 def load_data_from_database():
-    # TODO Implement
-    pass
+    shutil.copy("watchlist.sqlite", "wachlist.db")
+    connection = sqlite3.connect("watchlist.sqlite")
+    cursor = connection.cursor()
+
+    query = '''
+    SELECT 
+        m.title,
+        d.name AS director,
+        m.release_year,
+        g.name AS genre,
+        m.description
+    FROM movies m
+    JOIN directors d ON m.director_id = d.id
+    JOIN genres g ON m.genre_id = g.id;
+    '''
+
+    cursor.execute(query)
+    rows = cursor.fetchall()
+
+    movies = []
+    for row in rows:
+        title, director, release_year, genre, description = row
+        genre = Genre.genre_from_name(genre)
+        movie = Movie(title, director, release_year, genre, description)
+        movies.append(movie)
+
+    connection.close()
+    return movies
 
 
 file = 'films.txt'
-movie_list = load_data(file)
+movie_list = load_data_from_database()
 
 
 def find_movie_by_title(title):
@@ -47,9 +74,9 @@ def get_user_watchlist(user):
     return user.watch_list
 
 
-def add_movie(title=None, release_year=None, genre_id=None, short_description=None):
+def add_movie(title=None,director=None, release_year=None, genre_id=None, short_description=None):
     global movie_list
-    movie = Movie(title, release_year, genre_id, short_description)
+    movie = Movie(title, director, release_year, genre_id, short_description)
     movie_list.append(movie)
     save_movie(movie)
 
@@ -68,6 +95,8 @@ def sort_by(var):
     print(var)
     if var == "Title":
         val = sorted(get_last_respond(), key=lambda x: x.title)
+    elif var == "Director":
+        val = sorted(get_last_respond(), key=lambda x: x.director)
     elif var == "Year":
         val = sorted(get_last_respond(), key=lambda x: x.release_year)
     elif var == "Genre":
