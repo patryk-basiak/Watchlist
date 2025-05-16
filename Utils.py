@@ -15,14 +15,14 @@ def load_data(data):
 
 
 def load_data_from_database():
-    shutil.copy("watchlist.sqlite", "wachlist.db")
+    shutil.copy("watchlist.sqlite", "watchlist.db")
     connection = sqlite3.connect("watchlist.sqlite")
     cursor = connection.cursor()
 
     query = '''
     SELECT 
         m.title,
-        d.name AS director,
+        d.name || ' ' || d.surname AS director,
         m.release_year,
         g.name AS genre,
         m.description
@@ -119,3 +119,14 @@ def save_movie(movie):
     with open(file, "a") as file:
         file.write(';'.join(movie.get_values()))
     print("Movie save to txt file")
+
+def get_all_genres():
+    connection = sqlite3.connect("watchlist.db")
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT id, name FROM genres")
+    rows = cursor.fetchall()
+    connection.close()
+
+    genres = [Genre(name=row[1], genre_id=row[0]) for row in rows]
+    return genres
