@@ -1,5 +1,8 @@
 import shutil
 import sqlite3
+from tkinter.font import names
+
+from Objects.Director import Director
 from Objects.Genre import Genre
 from Objects.Movie import Movie
 res = None
@@ -22,9 +25,9 @@ def load_data_from_database():
     query = '''
     SELECT 
         m.title,
-        d.name || ' ' || d.surname AS director,
+        d.id, d.name, d.surname,
         m.release_year,
-        g.name AS genre,
+        g.id, g.name,
         m.description
     FROM movies m
     JOIN directors d ON m.director_id = d.id
@@ -36,14 +39,17 @@ def load_data_from_database():
 
     movies = []
     for row in rows:
-        title, director, release_year, genre, description = row
-        genre = Genre.genre_from_name(genre)
+        title = row[0]
+        director = Director(name=row[2], surname=row[3], director_id=row[1])
+        release_year = row[4]
+        genre = Genre(name=row[6], genre_id=row[5])
+        description = row[7]
+
         movie = Movie(title, director, release_year, genre, description)
         movies.append(movie)
 
     connection.close()
     return movies
-
 
 file = 'films.txt'
 movie_list = load_data_from_database()
@@ -123,10 +129,19 @@ def save_movie(movie):
 def get_all_genres():
     connection = sqlite3.connect("watchlist.db")
     cursor = connection.cursor()
-
     cursor.execute("SELECT id, name FROM genres")
     rows = cursor.fetchall()
     connection.close()
-
-    genres = [Genre(name=row[1], genre_id=row[0]) for row in rows]
+    genres = [Genre(genre_id=row[0], name=row[1]) for row in rows]
     return genres
+
+def get_all_directors():
+    connection = sqlite3.connect("watchlist.db")
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT id, name, surname FROM directors")
+    rows = cursor.fetchall()
+    connection.close()
+
+    directors = [Director(director_id=row[0], name=row[1], surname=row[2]) for row in rows]
+    return directors

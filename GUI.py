@@ -100,8 +100,7 @@ class App(customtkinter.CTk):
             self.second_frame,
             text="🔽 Genre",
             font=customtkinter.CTkFont(size=15, weight="bold"),
-            command=self.toggle_genre_filter
-        )
+            command=self.toggle_genre_filter)
         self.genre_filter_button.grid(row=2, column=2, padx=10, pady=100, sticky="new")
 
         self.genre_filter_frame = customtkinter.CTkFrame(self.second_frame)
@@ -113,6 +112,22 @@ class App(customtkinter.CTk):
 
         self.load_genre_checkboxes()
 
+        self.director_filter_visible = False
+        self.director_checkbox_vars = {}
+        self.director_checkboxes = []
+
+        self.director_filter_button = customtkinter.CTkButton(
+            self.second_frame,
+            text="🔽 Directors",
+            font=customtkinter.CTkFont(size=15, weight="bold"),
+            command=self.toggle_director_filter)
+        self.director_filter_button.grid(row=2, column=2, padx=10, pady=160, sticky="new")
+
+        self.director_filter_frame = customtkinter.CTkFrame(self.second_frame)
+        self.director_filter_frame.grid(row=2, column=2, padx=10, pady=200, sticky="new")
+        self.director_filter_frame.grid_remove()
+
+        self.load_director_checkboxes()
 
         # watchlist
         self.watchlist_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
@@ -313,9 +328,6 @@ class App(customtkinter.CTk):
         self.load_table(respond)
 
     def load_table(self, respond):
-        self.second_frame.grid_columnconfigure(0, weight=1)
-        self.second_frame.grid_columnconfigure(1, weight=1)
-        self.second_frame.grid_columnconfigure(2, weight=1)
         value = [["Title","Director", "Release year", "Genre", "Rating"]]
         for r in respond:
             value.append(r.get_values()[:-1])
@@ -352,7 +364,10 @@ class App(customtkinter.CTk):
         if self.genre_filter_visible:
             self.genre_filter_frame.grid()
             self.genre_filter_button.configure(text="🔼 Hide genre filter", font=customtkinter.CTkFont(size=15, weight="bold"))
+            self.director_filter_button.grid_remove()
+            self.director_filter_frame.grid_remove()
         else:
+            self.director_filter_button.grid()
             self.genre_filter_frame.grid_remove()
             self.genre_filter_button.configure(text="🔽 Genres", font=customtkinter.CTkFont(size=15, weight="bold"))
 
@@ -365,7 +380,7 @@ class App(customtkinter.CTk):
                                            font=customtkinter.CTkFont(size=15, weight="bold"),
                                            variable=var,
                                            command=self.apply_genre_filter)
-            cb.grid(row=i, column=2, sticky="w", pady=1)
+            cb.grid(row=i, column=2, sticky="new", pady=1)
             self.checkbox_vars[genre] = var
             self.checkboxes.append(cb)
 
@@ -380,4 +395,42 @@ class App(customtkinter.CTk):
 
         self.load_table(result)
 
+    def toggle_director_filter(self):
+        self.director_filter_visible = not self.director_filter_visible
+        if self.director_filter_visible:
+            self.genre_filter_frame.grid_remove()
+            self.director_filter_frame.grid()
+            self.director_filter_button.configure(text="🔼 Hide director filter",
+                                                  font=customtkinter.CTkFont(size=15, weight="bold"))
+        else:
+            self.director_filter_frame.grid_remove()
+            self.director_filter_button.configure(text="🔽 Directors",
+                                                  font=customtkinter.CTkFont(size=15, weight="bold"))
+
+    def load_director_checkboxes(self):
+        director_list = Utils.get_all_directors()
+        for i, director in enumerate(director_list):
+            var = customtkinter.BooleanVar()
+            cb = customtkinter.CTkCheckBox(
+                self.director_filter_frame,
+                text=director.full_name(),
+                font=customtkinter.CTkFont(size=15, weight="bold"),
+                variable=var,
+                command=self.apply_director_filter
+            )
+            cb.grid(row=i, column=2, sticky="new", pady=1)
+            self.director_checkbox_vars[director] = var
+            self.director_checkboxes.append(cb)
+
+    def apply_director_filter(self):
+        selected_director = [d.full_name() for d, var in self.director_checkbox_vars.items() if var.get()]
+        all_movies = Utils.get_movie_list()
+
+        if not selected_director:
+            result = all_movies
+        else:
+            print(selected_director)
+            result = [m for m in all_movies if m.director.full_name() in selected_director]
+
+        self.load_table(result)
 
