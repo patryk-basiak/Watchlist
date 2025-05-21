@@ -18,8 +18,8 @@ def load_data(data):
 
 
 def load_data_from_database():
-    shutil.copy("watchlist.sqlite", "watchlist.db")
-    connection = sqlite3.connect("watchlist.sqlite")
+    # shutil.copy("watchlist.sqlite", "watchlist.db")
+    connection = sqlite3.connect("watchlist.db")
     cursor = connection.cursor()
 
     query = '''
