@@ -116,8 +116,12 @@ def sort_by(var):
 
 def add_movie_object(movie):
     global movie_list
+    connection = sqlite3.connect("watchlist.db")
+    sql = "INSERT INTO movies(title,director_id,release_year, genre_id, description) VALUES(?,?,?,?,? )"
+    cursor = connection.cursor()
+    cursor.execute(sql, (movie.title, movie.director.id, movie.release_year, movie.genre.id, movie.description))
+    connection.commit()
     movie_list.append(movie)
-    # save_movie(movie) //TODO
 
 
 def save_movie(movie):

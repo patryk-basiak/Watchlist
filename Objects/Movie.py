@@ -4,7 +4,7 @@ from Objects.Errors import EmptyEntry
 
 class Movie:
     number = 0
-    def __init__(self, title, director, release_year, genre, description, grade=None):
+    def __init__(self, title, director, release_year, genre, description, grade=0):
         self.title = title
         self.director = director
         self.release_year = release_year
