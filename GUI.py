@@ -1,4 +1,5 @@
 import tkinter
+import datetime
 from tkinter import END
 from PIL import Image, ImageTk
 import customtkinter
@@ -322,8 +323,9 @@ class App(customtkinter.CTk):
         self.get_movie_inf(Utils.get_last_respond()[val-1])
 
     def post_review(self):
-        rew = Review(self.user,self.current_movie, self.textbox.get('1.0', END), self.rating_slider.get())
-        self.current_movie.add_review(rew)
+        rew = Review(99, datetime.datetime.now(), self.user.id,self.current_movie, self.textbox.get('1.0', END), self.rating_slider.get()) #TODO language
+        Utils.add_review(rew)
+
 
 
     def add_to_watchlist(self):

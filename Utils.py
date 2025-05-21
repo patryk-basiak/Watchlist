@@ -1,3 +1,4 @@
+import datetime
 import shutil
 import sqlite3
 from tkinter.font import names
@@ -5,6 +6,8 @@ from tkinter.font import names
 from Objects.Director import Director
 from Objects.Genre import Genre
 from Objects.Movie import Movie
+from Objects.Review import Review
+
 res = None
 
 
@@ -46,7 +49,18 @@ def load_data_from_database():
 
         movie = Movie(title, director, release_year, genre, description)
         movies.append(movie)
+    for movie in movies:
+        query = '''
+                SELECT *
+FROM Review
+WHERE movie_id = ?;
+'''
 
+        cursor.execute(query, (movie.id,))
+        rows = cursor.fetchall()
+        for row in rows:
+            rev = Review(row[0], row[1], row[2] , movie.id, row[4], row[5], row[6])
+            movie.reviews.append(rev)
     connection.close()
     return movies
 
@@ -148,3 +162,12 @@ def get_all_directors():
 
     directors = [Director(director_id=row[0], name=row[1], surname=row[2]) for row in rows]
     return directors
+
+
+def add_review(rew):
+    connection = sqlite3.connect("watchlist.db")
+    sql = "INSERT INTO Review(date, user_id,movie_id, text, rating, lang) VALUES(?,?,?,?,?,? )"
+    cursor = connection.cursor()
+    cursor.execute(sql, (datetime.datetime.now(), rew.user, rew.movie.id, rew.text, rew.rating, rew.lang))
+    connection.commit()
+    rew.movie.add_review(rew)

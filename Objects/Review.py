@@ -3,11 +3,9 @@ import datetime
 
 class Review:
     number = 0
-    def __init__(self, user, movie, text=None, stars=0, language="English" ):
-        self.id = Review.number
-        Review.number += 1
-        self.date = datetime.datetime.now()
-        self.user = user
+    def __init__(self, date, user_id, movie, text=None, stars=0, language="English" ):
+        self.date = date
+        self.user = user_id
         self.movie = movie
         self.text = text
         self.rating = stars
