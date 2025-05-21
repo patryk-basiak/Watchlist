@@ -143,30 +143,30 @@ class App(customtkinter.CTk):
         self.add_movie_frame.grid_columnconfigure(3, weight=1)
 
         self.label_title = customtkinter.CTkLabel(self.add_movie_frame, text="Title", font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.label_title.grid(row=1, column=1, padx=100, pady=10, sticky="e")
+        self.label_title.grid(row=1, column=1, padx=20, pady=10, sticky="ew")
         self.movie_title_entry = customtkinter.CTkEntry(self.add_movie_frame)
         self.movie_title_entry.grid(row=1, column=2, padx=20, pady=10,sticky="ew")
 
         genre_label = [x.name for x in Utils.get_all_genres()]
         self.label_genre = customtkinter.CTkLabel(self.add_movie_frame, text="Genre", font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.label_genre.grid(row=2, column=1, padx=85, pady=10, sticky="e")
+        self.label_genre.grid(row=2, column=1, padx=20, pady=10, sticky="ew")
         self.movie_genre_entry = customtkinter.CTkOptionMenu(self.add_movie_frame, values=genre_label)
         self.movie_genre_entry.grid(row=2, column=2, padx=20, pady=10, sticky="ew")
 
         self.label_year = customtkinter.CTkLabel(self.add_movie_frame, text="Release year", font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.label_year.grid(row=3, column=1, padx=18, pady=10, sticky="e",)
+        self.label_year.grid(row=3, column=1, padx=20, pady=10, sticky="ew",)
         self.movie_year_entry = customtkinter.CTkEntry(self.add_movie_frame)
         self.movie_year_entry.grid(row=3, column=2, padx=20, pady=10, sticky="ew")
 
         director_labels = [x.name + ' ' + x.surname for x in Utils.get_all_directors()]
         self.label_director = customtkinter.CTkLabel(self.add_movie_frame, text="Director",
                                                   font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.label_director.grid(row=4, column=1, padx=85, pady=10, sticky="e")
+        self.label_director.grid(row=4, column=1, padx=20, pady=10, sticky="ew")
         self.movie_director_option = customtkinter.CTkOptionMenu(self.add_movie_frame, values=director_labels)
         self.movie_director_option.grid(row=4, column=2, padx=20, pady=10, sticky="ew")
 
         self.label_description = customtkinter.CTkLabel(self.add_movie_frame, text="Description", font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.label_description.grid(row=5, column=1, padx=30, pady=40, sticky="nse")
+        self.label_description.grid(row=5, column=1, padx=20, pady=40, sticky="nsew")
         self.movie_description_entry = customtkinter.CTkTextbox(self.add_movie_frame, height=100)
         self.movie_description_entry.grid(row=5, column=2, padx=20, pady=10, sticky = "nsew", rowspan=2)
 
@@ -353,17 +353,16 @@ class App(customtkinter.CTk):
         description = self.movie_description_entry.get("1.0", "end").strip()
         try:
             movie = Movie(title, director,  year, genre, description)
-        except (TypeError, EmptyEntry) as e:
-            self.notification_manager.show_notification(
-                str(e), NotifyType.ERROR),
-            return #TODO
+        except (EmptyEntry,TypeError, ValueError) as e:
+            return self.notification_manager.show_notification(
+                str(e), NotifyType.ERROR, duration=1500)
         try:
             Utils.add_movie_object(movie)
         except Exception as e:
             return self.notification_manager.show_notification(
                 str(e), NotifyType.ERROR),
         self.notification_manager.show_notification(
-            "Movie added", NotifyType.SUCCESS),
+            "Movie added", NotifyType.SUCCESS, duration=1500)
 
     def update_stars(self, value):
         full_stars = int(float(value))
