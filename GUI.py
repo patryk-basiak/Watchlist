@@ -288,35 +288,63 @@ class App(customtkinter.CTk):
                                                       font=customtkinter.CTkFont(size=15, weight="bold"))
         self.button_add.grid(row=4, column=0, padx=20,pady=10, sticky="",columnspan=3)
 
+        if len([x for x in self.current_movie.reviews if x.user == self.user.id]) == 0:
+            self.rating_slider = customtkinter.CTkSlider(self.movie_frame, from_=0, to=5, number_of_steps=5,
+                                                         command=self.update_stars,height=80, width=100,
+                                                            progress_color="#242424",
+                                                            fg_color="#242424",
+                                                            button_color="#242424",
+                                                            button_hover_color="#242424")
+            self.rating_slider.set(3)
+            self.rating_slider.grid(row=5, column=1, padx=15, pady=0, sticky="s")
 
-        self.rating_slider = customtkinter.CTkSlider(self.movie_frame, from_=0, to=5, number_of_steps=5,
-                                                     command=self.update_stars,height=80, width=100,
-                                                        progress_color="#242424",
-                                                        fg_color="#242424",
-                                                        button_color="#242424",
-                                                        button_hover_color="#242424")
-        self.rating_slider.set(3)
-        self.rating_slider.grid(row=5, column=1, padx=15, pady=0, sticky="s")
+            self.stars_label = customtkinter.CTkLabel(self.movie_frame, text="★★★☆☆",
+                                                      font=customtkinter.CTkFont(size=20, weight="bold"),
+                                                      text_color="#FFD700")
+            self.stars_label.grid(row=5, column=1, padx=20, pady=0, sticky="s")
 
-        self.stars_label = customtkinter.CTkLabel(self.movie_frame, text="★★★☆☆",
-                                                  font=customtkinter.CTkFont(size=20, weight="bold"),
-                                                  text_color="#FFD700")
-        self.stars_label.grid(row=5, column=1, padx=20, pady=0, sticky="s")
+            self.rating = customtkinter.CTk
 
-        self.rating = customtkinter.CTk
+            self.textbox = customtkinter.CTkTextbox(self.movie_frame, width=400, corner_radius=0, height=150)
+            self.textbox.grid(row=7, column=0, sticky="we", columnspan=3, padx=20, pady=10)
+            self.textbox.insert("0.0", "Give us your feedback about this movie!")
 
-        self.textbox = customtkinter.CTkTextbox(self.movie_frame, width=400, corner_radius=0, height=150)
-        self.textbox.grid(row=7, column=0, sticky="we", columnspan=3, padx=20, pady=10)
-        self.textbox.insert("0.0", "Give us your feedback about this movie!")
-
-        self.button_review = customtkinter.CTkButton(self.movie_frame, text="Post review", command=self.post_review,
-                                                     font=customtkinter.CTkFont(size=15, weight="bold"))
-        self.button_review.grid(row=8, column=0, padx=20, pady=10, sticky="ew", columnspan=3)
+            self.button_review = customtkinter.CTkButton(self.movie_frame, text="Post review", command=self.post_review,
+                                                         font=customtkinter.CTkFont(size=15, weight="bold"))
+            self.button_review.grid(row=8, column=0, padx=20, pady=10, sticky="ew", columnspan=3)
 
         for i, x in enumerate(self.current_movie.reviews):
-            self.review = customtkinter.CTkLabel(self.movie_frame, text=f"{x.user}, {x.text}, {int(x.rating)}, {x.date}",
-                                                  font=customtkinter.CTkFont(size=14))
-            self.review.grid(row=8 + i, column=0, sticky="we", columnspan=3, padx=20, pady=10)
+
+            review_frame = customtkinter.CTkFrame(self.movie_frame, corner_radius=10, fg_color="#2a2a2a")  # ciemna rama
+            review_frame.grid(row=8 + i, column=0, columnspan=3, padx=20, pady=10, sticky="we")
+
+
+            user_label = customtkinter.CTkLabel(
+                review_frame,
+                text=f"{Utils.get_username_by_id(x.user)} - ⭐ {int(x.rating)}/5",
+                font=customtkinter.CTkFont(size=14, weight="bold"),
+                text_color="#f0db4f"
+            )
+            user_label.grid(row=0, column=0, sticky="w", padx=10, pady=(5, 0))
+
+
+            date_label = customtkinter.CTkLabel(
+                review_frame,
+                text=f"{x.date}",
+                font=customtkinter.CTkFont(size=12, slant="italic"),
+                text_color="#888888"
+            )
+            date_label.grid(row=0, column=1, sticky="e", padx=10, pady=(5, 0))
+
+
+            text_label = customtkinter.CTkLabel(
+                review_frame,
+                text=x.text,
+                font=customtkinter.CTkFont(size=13),
+                wraplength=600,
+                justify="left"
+            )
+            text_label.grid(row=1, column=0, columnspan=2, sticky="w", padx=10, pady=(5, 10))
 
     def movie_id(self, row):
         val = int(list(dict(row).values())[0])
@@ -334,7 +362,6 @@ class App(customtkinter.CTk):
     def add_to_watchlist(self):
         self.user.add_movie(self.current_movie)
     def remove_from_watchlist(self):
-
         self.user.delete_movie(self.current_movie)
 
     def sort(self, var):
@@ -358,7 +385,7 @@ class App(customtkinter.CTk):
         director = next(x for x in Utils.get_all_directors() if x.name + ' ' + x.surname == self.movie_director_option.get())
         description = self.movie_description_entry.get("1.0", "end").strip()
         try:
-            movie = Movie(title, director,  year, genre, description)
+            movie = Movie(title, director,  year, genre, description) #TODO
         except (EmptyEntry,TypeError, ValueError) as e:
             return self.notification_manager.show_notification(
                 str(e), NotifyType.ERROR, duration=1500)

@@ -161,7 +161,6 @@ def get_all_directors():
     cursor.execute("SELECT id, name, surname FROM directors")
     rows = cursor.fetchall()
     connection.close()
-
     directors = [Director(director_id=row[0], name=row[1], surname=row[2]) for row in rows]
     return directors
 
@@ -174,3 +173,12 @@ def add_review(rew):
     cursor.execute(sql, (rew.date, rew.user, rew.movie.id, rew.text, rew.rating, rew.lang))
     connection.commit()
     rew.movie.add_review(rew)
+
+def get_username_by_id(user_id):
+    connection = sqlite3.connect("watchlist.db")
+    cursor = connection.cursor()
+    sql = "SELECT login FROM user where id = ?"
+    cursor.execute(sql, (user_id, ))
+    rows = cursor.fetchall()
+    print(rows)
+    return rows[0][0]
