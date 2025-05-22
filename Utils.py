@@ -53,7 +53,9 @@ def load_data_from_database():
 
         movie = Movie(title, director, release_year, genre, description, id_n)
         movies.append(movie)
+
     for movie in movies:
+        suma = 0
         query = '''
                 SELECT *
 FROM Review
@@ -63,9 +65,11 @@ WHERE movie_id = ?;
         cursor.execute(query, (movie.id,))
         rows = cursor.fetchall()
         for row in rows:
+            suma += float(row[5])
             parsed_date = datetime.datetime.strptime(row[1], "%Y-%m-%d %H:%M:%S.%f")
             rev = Review(parsed_date, row[2] , movie.id, row[4], row[5], row[6])
             movie.reviews.append(rev)
+            movie.grade = suma
     connection.close()
     return movies
 

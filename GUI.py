@@ -378,6 +378,7 @@ class App(customtkinter.CTk):
     def post_review(self):
         rew = Review(datetime.datetime.now(), self.user.id, self.current_movie, self.textbox.get('1.0', END), self.rating_slider.get()) #TODO language
         Utils.add_review(rew)
+        self.current_movie += rew.rating
         self.movie_frame_event()
         self.get_movie_inf(Utils.get_last_respond()[self.val - 1])
         self.notification_manager.show_notification("Review posted!", NotifyType.SUCCESS, duration=1500)
