@@ -332,9 +332,10 @@ class App(customtkinter.CTk):
 
         for i, x in enumerate(self.current_movie.reviews):
 
-            review_frame = customtkinter.CTkFrame(self.movie_frame, corner_radius=10, fg_color="#2a2a2a")  # ciemna rama
+            review_frame = customtkinter.CTkFrame(self.movie_frame, corner_radius=10, fg_color="#2a2a2a")
             review_frame.grid(row=8 + i, column=0, columnspan=3, padx=20, pady=10, sticky="we")
 
+            review_frame.grid_columnconfigure(1, weight=1)
 
             user_label = customtkinter.CTkLabel(
                 review_frame,
@@ -344,16 +345,31 @@ class App(customtkinter.CTk):
             )
             user_label.grid(row=0, column=0, sticky="w", padx=10, pady=(5, 0))
 
-
             date_label = customtkinter.CTkLabel(
                 review_frame,
                 text=x.date.strftime("%d.%m.%Y %H:%M "),
                 font=customtkinter.CTkFont(size=12, slant="italic"),
                 text_color="#888888",
             )
-            date_label.grid(row=0, column=1, sticky="e", padx=10, pady=(5, 0))
+            date_label.grid(row=0, column=1, sticky="w", padx=10, pady=(5, 0))
 
 
+            if self.user.id == x.user:
+                delete_button = customtkinter.CTkButton(
+                    review_frame,
+                    text="Delete review",
+                    font=customtkinter.CTkFont(size=12),
+                    command=lambda: self.delete_review(x)
+                )
+                delete_button.grid(row=0, column=2, sticky="e", padx=10, pady=(5, 0))
+            else:
+                delete_button = customtkinter.CTkButton(
+                    review_frame,
+                    text="Report review",
+                    font=customtkinter.CTkFont(size=12),
+                    command=lambda: self.report_review(x)
+                )
+                delete_button.grid(row=0, column=2, sticky="e", padx=10, pady=(5, 0))
             text_label = customtkinter.CTkLabel(
                 review_frame,
                 text=x.text,
@@ -361,7 +377,7 @@ class App(customtkinter.CTk):
                 wraplength=600,
                 justify="left"
             )
-            text_label.grid(row=1, column=0, columnspan=2, sticky="w", padx=10, pady=(5, 10))
+            text_label.grid(row=1, column=0, columnspan=3, sticky="w", padx=10, pady=(5, 10))
 
     def movie_id(self, row):
         val = int(list(dict(row).values())[0])
@@ -532,3 +548,9 @@ class App(customtkinter.CTk):
 
     def checkbox_watched(self):
         Utils.set_checkbox(self.current_movie, self.watched_var.get(), self.user)
+
+    def delete_review(self, id):
+        pass #TODO
+
+    def report_review(self, x):
+        pass #TODO
