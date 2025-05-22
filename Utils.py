@@ -56,6 +56,7 @@ def load_data_from_database():
 
     for movie in movies:
         suma = 0
+
         query = '''
                 SELECT *
 FROM Review
@@ -69,13 +70,41 @@ WHERE movie_id = ?;
             parsed_date = datetime.datetime.strptime(row[1], "%Y-%m-%d %H:%M:%S.%f")
             rev = Review(parsed_date, row[2] , movie.id, row[4], row[5], row[6])
             movie.reviews.append(rev)
-            movie.grade = suma
+        if len(rows) != 0:
+            movie.grade = suma/len(rows)
+        query = '''
+                        SELECT *
+        FROM Watched
+        WHERE movieId = ?;
+        '''
+        cursor.execute(query, (movie.id,))
+        result = cursor.fetchall()
+        if len(result) > 0:
+            movie.watched = True
     connection.close()
+
+
     return movies
 
 file = 'films.txt'
 movie_list = load_data_from_database()
 
+def load_watchlist(user):
+    connection = sqlite3.connect("watchlist.db")
+    cursor = connection.cursor()
+
+    query = '''
+        SELECT 
+            *
+        FROM User_Movie
+        where userId = ?
+        '''
+
+    cursor.execute(query, (user.id,))
+    rows = cursor.fetchall()
+    for row in rows:
+        parsed_date = datetime.datetime.strptime(row[2], "%Y-%m-%d %H:%M:%S.%f")
+        user.watch_list.append([next(x for x in movie_list if x.id == row[1]), parsed_date])
 
 def find_movie_by_title(title):
     title = title.lower()
@@ -241,3 +270,36 @@ def get_movie_from_web(param):
     m = Movie(title, director, year, genre, description, None)
     add_movie_object(m)
     return m
+
+
+def add_movie_to_watchlist(current_movie, user):
+    connection = sqlite3.connect("watchlist.db")
+    sql = "INSERT INTO User_Movie(userID, movieID, date) VALUES(?,?,? )"
+    cursor = connection.cursor()
+    date = datetime.datetime.now()
+    cursor.execute(sql, (user.id, current_movie.id, date))
+    connection.commit()
+    user.add_movie(current_movie,date)
+
+def remove_from_watchlist(movie, user):
+    connection = sqlite3.connect("watchlist.db")
+    sql = "DELETE FROM User_Movie WHERE userId = ? and movieId = ?"
+    cursor = connection.cursor()
+    cursor.execute(sql, (user.id, movie.id))
+    connection.commit()
+    user.delete_movie(movie)
+
+
+def set_checkbox(current_movie, param, user):
+    if param:
+        connection = sqlite3.connect("watchlist.db")
+        sql = "INSERT INTO Watched(userID, movieID) VALUES(?,? )"
+        cursor = connection.cursor()
+        cursor.execute(sql, (user.id, current_movie.id))
+        connection.commit()
+    else:
+        connection = sqlite3.connect("watchlist.db")
+        sql = "DELETE FROM Watched WHERE userId, movieId "
+        cursor = connection.cursor()
+        cursor.execute(sql, (user.id, current_movie.id))
+        connection.commit()

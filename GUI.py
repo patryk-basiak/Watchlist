@@ -279,8 +279,13 @@ class App(customtkinter.CTk):
                                              font=customtkinter.CTkFont(size=20, weight="bold"))
         self.title1.grid(row=1, column=0, padx=20, pady=10, sticky="nsew", columnspan=3)
 
+
         self.is_watched = customtkinter.CTkCheckBox(self.movie_frame, text=f"Watched?",
-                                                    font=customtkinter.CTkFont(size=20, weight="bold"), variable=self.watched_var, onvalue=True, offvalue=False)
+                                                    font=customtkinter.CTkFont(size=20, weight="bold"), variable=self.watched_var, onvalue=True, offvalue=False, command=self.checkbox_watched)
+        if self.current_movie.watched:
+            self.is_watched.select()
+        else:
+            self.is_watched.deselect()
         self.is_watched.grid(row=1, column=0, padx=20, pady=10, sticky="w",columnspan=3)
 
         self.year = customtkinter.CTkLabel(self.movie_frame, text=f"Release year: {movie.release_year}",
@@ -393,10 +398,10 @@ class App(customtkinter.CTk):
             "Movie added", NotifyType.SUCCESS, duration=1500)
         self.frame_4_button_event()
     def add_to_watchlist(self):
-        self.user.add_movie(self.current_movie, self.watched_var.get())
+        Utils.add_movie_to_watchlist(self.current_movie, self.user)
         self.get_movie_inf(Utils.get_last_respond()[self.val - 1])
     def remove_from_watchlist(self):
-        self.user.delete_movie(self.current_movie)
+        Utils.remove_from_watchlist(self.current_movie, self.user)
         self.get_movie_inf(Utils.get_last_respond()[self.val - 1])
 
     def sort(self, var):
@@ -515,7 +520,7 @@ class App(customtkinter.CTk):
 
     def load_watchlist(self):
 
-        table_data = [["Title", "Director", "Release year", "Genre", "Rating", 'Watched']]
+        table_data = [["Title", "Director", "Release year", "Genre", "Rating", 'Watched', 'Added date']]
         watchlist = Utils.get_user_watchlist(self.user)
 
         if len(watchlist) == 0:
@@ -523,13 +528,17 @@ class App(customtkinter.CTk):
 
         for r in watchlist:
             to_append = r[0].get_values()[:-1]
-            if not r[1]:
-                to_append.append("No")
-            else:
+            to_append.append(r[1].strftime("%d.%m.%Y %H:%M "))
+            if r[0].watched:
                 to_append.append("Yes")
+            else:
+                to_append.append("No")
             table_data.append(to_append)
 
 
         self.table = CTkTable(self.watchlist_frame, row=len(table_data) + 1, values=table_data,
                               wraplength=2000)
         self.table.grid(row=2, column=0, padx=20, pady=20, columnspan=2, sticky="new")
+
+    def checkbox_watched(self):
+        Utils.set_checkbox(self.current_movie, self.watched_var.get(), self.user)

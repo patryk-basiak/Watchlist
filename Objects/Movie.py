@@ -4,7 +4,7 @@ from Objects.Errors import EmptyEntry
 
 class Movie:
     number = 0
-    def __init__(self, title, director, release_year, genre, description, no, grade=0):
+    def __init__(self, title, director, release_year, genre, description, no, grade=0, watched=False):
         self.title = title
         self.director = director
         self.release_year = release_year
@@ -14,6 +14,7 @@ class Movie:
         self.id = no
         self.reviews = []
         self.title_properties = title.split()
+        self.watched = watched
 
     @property
     def title(self):
