@@ -92,8 +92,6 @@ class App(customtkinter.CTk):
         self.sort = customtkinter.CTkComboBox(self.second_frame, values=["Default","Director", "Year", "Title", "Genre", "Rating"],font=customtkinter.CTkFont(size=15, weight="bold"), command=self.sort)
         self.sort.grid(row=2,column=2, padx=20, pady=30, sticky="new")
 
-        self.load_table(Utils.get_last_respond())
-
         self.filter_by = customtkinter.CTkLabel(self.second_frame, text="Filter by", font=customtkinter.CTkFont(size=20, weight="bold"))
         self.filter_by.grid(row=2,column=2, padx=20, pady=70, sticky="new")
 
@@ -409,7 +407,7 @@ class App(customtkinter.CTk):
         for r in respond:
             value.append(r.get_values()[:-1])
         if self.table is not None:
-            self.table.grid_remove()
+            self.table.grid_forget()
         self.table = CTkTable(self.second_frame, row=len(respond) + 1, values=value, wraplength=2000,
                               command=self.movie_id)
         self.table.grid(row=2, column=0, padx=20, pady=20, columnspan=2, sticky="new")
