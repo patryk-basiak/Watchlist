@@ -190,6 +190,9 @@ def add_genre(param):
     cursor = connection.cursor()
     cursor.execute(sql, (param, ))
     connection.commit()
+    genre_id = cursor.lastrowid
+    connection.close()
+    return genre_id
 
 def add_director(param):
     connection = sqlite3.connect("watchlist.db")
@@ -219,8 +222,8 @@ def get_movie_from_web(param):
             genre = g
             break
     if genre is None:
-        add_genre(js['Genre'].split(',')[0])
-        genre = Genre(js['Genre'].split(',')[0])
+        genre_id = add_genre(js['Genre'].split(',')[0])
+        genre = Genre(js['Genre'].split(',')[0], genre_id)
     for direct in get_all_directors():
         if direct.name == js['Director'].split()[0]:
             director = direct

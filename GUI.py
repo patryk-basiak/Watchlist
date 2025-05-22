@@ -368,6 +368,7 @@ class App(customtkinter.CTk):
              return
         self.notification_manager.show_notification(
             "Movie added", NotifyType.SUCCESS, duration=1500)
+        self.frame_4_button_event()
     def add_to_watchlist(self):
         self.user.add_movie(self.current_movie)
     def remove_from_watchlist(self):
