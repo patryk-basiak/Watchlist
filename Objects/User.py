@@ -8,8 +8,9 @@ class User:
         self.watch_list = []
         self.reviews = []
 
-    def add_movie(self, movie):
-        self.watch_list.append([movie, False])
+    def add_movie(self, movie, watched=False):
+        self.watch_list.append([movie, watched])
+        print(self.watch_list)
 
     def delete_movie(self, movie):
         temp = next(x for x in self.watch_list if x[0] == movie)

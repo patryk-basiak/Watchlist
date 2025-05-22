@@ -22,6 +22,7 @@ class App(customtkinter.CTk):
         self.table = None
         self.user = user
         self.val = 1
+        self.watched_var = customtkinter.BooleanVar(value=False)
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
         self.navigation_frame = customtkinter.CTkFrame(self, corner_radius=0)
@@ -137,7 +138,7 @@ class App(customtkinter.CTk):
         # watchlist
         self.watchlist_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
         self.watchlist_frame.grid_columnconfigure(0, weight=1)
-        self.watchlist = customtkinter.CTkLabel(self.watchlist_frame, text="You're watchlist")
+        self.watchlist = customtkinter.CTkLabel(self.watchlist_frame, text="Your watchlist")
         self.watchlist.grid(row=1, column=0, padx=20, pady=10)
 
         self.load_watchlist()
@@ -278,6 +279,10 @@ class App(customtkinter.CTk):
                                              font=customtkinter.CTkFont(size=20, weight="bold"))
         self.title1.grid(row=1, column=0, padx=20, pady=10, sticky="nsew", columnspan=3)
 
+        self.is_watched = customtkinter.CTkCheckBox(self.movie_frame, text=f"Watched?",
+                                                    font=customtkinter.CTkFont(size=20, weight="bold"), variable=self.watched_var, onvalue=True, offvalue=False)
+        self.is_watched.grid(row=1, column=0, padx=20, pady=10, sticky="w",columnspan=3)
+
         self.year = customtkinter.CTkLabel(self.movie_frame, text=f"Release year: {movie.release_year}",
                                            font=customtkinter.CTkFont(size=20, weight="bold"))
         self.year.grid(row=2, column=0, padx=20, pady=10, sticky="nsew", columnspan=3)
@@ -286,16 +291,21 @@ class App(customtkinter.CTk):
                                             font=customtkinter.CTkFont(size=20, weight="bold"))
         self.genre.grid(row=3, column=0, padx=20, pady=10, sticky="nsew", columnspan=3)
 
+        self.description = customtkinter.CTkLabel(self.movie_frame, text=f"Description:\n {movie.description}",
+                                                  font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.description.grid(row=4, column=0, padx=20, pady=10, sticky="nsew", columnspan=3)
+
         a = next((x for x in self.user.watch_list if x[0] == movie), None)
         if a is not None:
             self.button_add = customtkinter.CTkButton(self.movie_frame, text="Remove from watchlist",
                                                       command=self.remove_from_watchlist,
                                                       font=customtkinter.CTkFont(size=15, weight="bold"))
+            self.button_add.grid(row=5, column=1, padx=400, pady=10, sticky="ew")
         else:
             self.button_add = customtkinter.CTkButton(self.movie_frame, text="Add to watchlist",
                                                       command=self.add_to_watchlist,
                                                       font=customtkinter.CTkFont(size=15, weight="bold"))
-        self.button_add.grid(row=4, column=0, padx=20,pady=10, sticky="",columnspan=3)
+            self.button_add.grid(row=5, column=1, padx=400, pady=10, sticky="ew")
 
         print(customtkinter.get_appearance_mode())
 
@@ -307,12 +317,12 @@ class App(customtkinter.CTk):
                                                          button_color=self.color,
                                                          button_hover_color=self.color)
             self.rating_slider.set(3)
-            self.rating_slider.grid(row=5, column=1, padx=15, pady=0, sticky="s")
+            self.rating_slider.grid(row=6, column=1, padx=15, pady=0, sticky="s")
 
             self.stars_label = customtkinter.CTkLabel(self.movie_frame, text="★★★☆☆",
                                                       font=customtkinter.CTkFont(size=20, weight="bold"),
                                                       text_color="#FFD700")
-            self.stars_label.grid(row=5, column=1, padx=20, pady=0, sticky="s")
+            self.stars_label.grid(row=6, column=1, padx=20, pady=0, sticky="s")
 
             self.rating = customtkinter.CTk
 
@@ -382,9 +392,11 @@ class App(customtkinter.CTk):
             "Movie added", NotifyType.SUCCESS, duration=1500)
         self.frame_4_button_event()
     def add_to_watchlist(self):
-        self.user.add_movie(self.current_movie)
+        self.user.add_movie(self.current_movie, self.watched_var.get())
+        self.get_movie_inf(Utils.get_last_respond()[self.val - 1])
     def remove_from_watchlist(self):
         self.user.delete_movie(self.current_movie)
+        self.get_movie_inf(Utils.get_last_respond()[self.val - 1])
 
     def sort(self, var):
         respond = Utils.sort_by(var)
@@ -520,5 +532,3 @@ class App(customtkinter.CTk):
         self.table = CTkTable(self.watchlist_frame, row=len(table_data) + 1, values=table_data,
                               wraplength=2000)
         self.table.grid(row=2, column=0, padx=20, pady=20, columnspan=2, sticky="new")
-
-
