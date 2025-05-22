@@ -4,7 +4,7 @@ import sqlite3
 from tkinter.font import names
 
 import requests
-
+from urllib.parse import quote
 from Objects.Director import Director
 from Objects.Genre import Genre
 from Objects.Movie import Movie
@@ -244,10 +244,11 @@ def add_director(param):
 
 
 def get_movie_from_web(param):
+    param = quote(param)
     apikey = "REMOVED"
     x = requests.get(f'https://www.omdbapi.com/?t={param}&apikey={apikey}')
     js = x.json()
-    title = param
+    title = js['Title']
     director = None
     year = js['Released'].split()[-1]
     genre = None

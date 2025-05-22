@@ -11,6 +11,7 @@ import Utils
 from Objects.Errors import EmptyEntry
 from Objects.Movie import Movie
 from Objects.Review import Review
+from gui_elements.home import Home
 
 
 class App(customtkinter.CTk):
@@ -69,12 +70,7 @@ class App(customtkinter.CTk):
                                                                 command=self.change_appearance_mode_event)
         self.appearance_mode_menu.grid(row=6, column=0, padx=20, pady=20, sticky="s")
         # home
-        self.home_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
-        self.home_frame.grid_columnconfigure(0, weight=1)
-
-
-        self.box = customtkinter.CTkLabel(self.home_frame,text=f"Welcome {user.login}")
-        self.box.grid(row=1, column=0, padx=20,pady=10)
+        self.home_frame = Home(self.user, self)
 
         #find movies
         self.second_frame = customtkinter.CTkScrollableFrame(self, corner_radius=0, fg_color="transparent")
