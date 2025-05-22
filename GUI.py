@@ -16,10 +16,12 @@ from Objects.Review import Review
 class App(customtkinter.CTk):
     def __init__(self, user):
         super().__init__()
+        self.color = "#242424"
         self.notification_manager = NotificationManager(self)
         self.rating_slider = None
         self.table = None
         self.user = user
+        self.val = 1
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
         self.navigation_frame = customtkinter.CTkFrame(self, corner_radius=0)
@@ -178,7 +180,7 @@ class App(customtkinter.CTk):
         self.add_movie_button = customtkinter.CTkButton(self.add_movie_frame, command = self.add_movie, text="Add movie", font=customtkinter.CTkFont(size=15, weight="bold"))
         self.add_movie_button.grid(row=7, column=1, padx=20, pady=10, sticky = "ew", columnspan=2)
 
-        self.add_movie_button_web = customtkinter.CTkButton(self.add_movie_frame, command = self.get_movie_from_web, text="Add movie from web", font=customtkinter.CTkFont(size=15, weight="bold"), fg_color="Red")
+        self.add_movie_button_web = customtkinter.CTkButton(self.add_movie_frame, command = self.get_movie_from_web, text="Add movie from web [BETA]", font=customtkinter.CTkFont(size=15, weight="bold"), fg_color="Green")
         self.add_movie_button_web.grid(row=8, column=1, padx=20, pady=10, sticky = "ew", columnspan=2)
 
         #movieframe
@@ -247,9 +249,13 @@ class App(customtkinter.CTk):
         self.movie_frame.grid_columnconfigure(0, weight=1)
         self.select_frame_by_name("movie_frame")
 
-    @staticmethod
-    def change_appearance_mode_event(new_appearance_mode):
+
+    def change_appearance_mode_event(self,new_appearance_mode):
         customtkinter.set_appearance_mode(new_appearance_mode)
+        if customtkinter.get_appearance_mode() == "Dark":
+            self.color = "#242424"
+        if customtkinter.get_appearance_mode() == "Light":
+            self.color = "white"
 
     def find_movies(self):
         self.bind("<Return>", lambda event: self.find_movies())
@@ -291,13 +297,15 @@ class App(customtkinter.CTk):
                                                       font=customtkinter.CTkFont(size=15, weight="bold"))
         self.button_add.grid(row=4, column=0, padx=20,pady=10, sticky="",columnspan=3)
 
+        print(customtkinter.get_appearance_mode())
+
         if len([x for x in self.current_movie.reviews if x.user == self.user.id]) == 0:
             self.rating_slider = customtkinter.CTkSlider(self.movie_frame, from_=0, to=5, number_of_steps=5,
                                                          command=self.update_stars,height=80, width=100,
-                                                            progress_color="#242424",
-                                                            fg_color="#242424",
-                                                            button_color="#242424",
-                                                            button_hover_color="#242424")
+                                                         progress_color=self.color,
+                                                         fg_color=self.color,
+                                                         button_color=self.color,
+                                                         button_hover_color=self.color)
             self.rating_slider.set(3)
             self.rating_slider.grid(row=5, column=1, padx=15, pady=0, sticky="s")
 
@@ -333,9 +341,9 @@ class App(customtkinter.CTk):
 
             date_label = customtkinter.CTkLabel(
                 review_frame,
-                text=f"{x.date}",
+                text=x.date.strftime("%d.%m.%Y %H:%M "),
                 font=customtkinter.CTkFont(size=12, slant="italic"),
-                text_color="#888888"
+                text_color="#888888",
             )
             date_label.grid(row=0, column=1, sticky="e", padx=10, pady=(5, 0))
 
@@ -353,12 +361,16 @@ class App(customtkinter.CTk):
         val = int(list(dict(row).values())[0])
         if val < 1:
             return
+        self.val = val
         self.movie_frame_event()
         self.get_movie_inf(Utils.get_last_respond()[val-1])
 
     def post_review(self):
         rew = Review(datetime.datetime.now(), self.user.id, self.current_movie, self.textbox.get('1.0', END), self.rating_slider.get()) #TODO language
         Utils.add_review(rew)
+        self.movie_frame_event()
+        self.get_movie_inf(Utils.get_last_respond()[self.val - 1])
+        self.notification_manager.show_notification("Review posted!", NotifyType.SUCCESS, duration=1500)
 
     def get_movie_from_web(self):
         try:
