@@ -195,8 +195,16 @@ def add_director(param):
     connection = sqlite3.connect("watchlist.db")
     sql = "INSERT INTO Directors(name, surname) VALUES(?,?)"
     cursor = connection.cursor()
-    cursor.execute(sql, (param[0], " ".join(param[1:]) ))
+    cursor.execute(sql, (param[0], " ".join(param[1:])))
     connection.commit()
+
+    director_id = cursor.lastrowid
+
+    connection.close()
+
+    return director_id
+
+
 
 def get_movie_from_web(param):
     apikey = "REMOVED"
@@ -218,8 +226,8 @@ def get_movie_from_web(param):
             director = direct
             break
     if director is None:
-        add_director(js['Director'].split())
-        director = Director(js['Director'].split()[0], js['Director'].split()[1])
+        director_id = add_director(js['Director'].split())
+        director = Director(js['Director'].split()[0], js['Director'].split()[1], director_id)
 
     description = js['Plot']
     m = Movie(title, director, year, genre, description, None)
