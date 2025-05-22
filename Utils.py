@@ -3,6 +3,8 @@ import shutil
 import sqlite3
 from tkinter.font import names
 
+import requests
+
 from Objects.Director import Director
 from Objects.Genre import Genre
 from Objects.Movie import Movie
@@ -169,7 +171,6 @@ def add_review(rew):
     connection = sqlite3.connect("watchlist.db")
     sql = "INSERT INTO Review(date, user_id,movie_id, text, rating, lang) VALUES(?,?,?,?,?,? )"
     cursor = connection.cursor()
-    print(type(rew.text))
     cursor.execute(sql, (rew.date, rew.user, rew.movie.id, rew.text, rew.rating, rew.lang))
     connection.commit()
     rew.movie.add_review(rew)
@@ -182,3 +183,45 @@ def get_username_by_id(user_id):
     rows = cursor.fetchall()
     print(rows)
     return rows[0][0]
+
+def add_genre(param):
+    connection = sqlite3.connect("watchlist.db")
+    sql = "INSERT INTO Genres(name) VALUES(?)"
+    cursor = connection.cursor()
+    cursor.execute(sql, (param, ))
+    connection.commit()
+
+def add_director(param):
+    connection = sqlite3.connect("watchlist.db")
+    sql = "INSERT INTO Directors(name, surname) VALUES(?,?)"
+    cursor = connection.cursor()
+    cursor.execute(sql, (param[0], " ".join(param[1:]) ))
+    connection.commit()
+
+def get_movie_from_web(param):
+    apikey = "REMOVED"
+    x = requests.get(f'https://www.omdbapi.com/?t={param}&apikey={apikey}')
+    js = x.json()
+    title = param
+    director = None
+    year = js['Released'].split()[-1]
+    genre = None
+    for g in get_all_genres():
+        if g.name == js['Genre'].split(',')[0]:
+            genre = g
+            break
+    if genre is None:
+        add_genre(js['Genre'].split(',')[0])
+        genre = Genre(js['Genre'].split(',')[0])
+    for direct in get_all_directors():
+        if direct.name == js['Director'].split()[0]:
+            director = direct
+            break
+    if director is None:
+        add_director(js['Director'].split())
+        director = Director(js['Director'].split()[0], js['Director'].split()[1])
+
+    description = js['Plot']
+    m = Movie(title, director, year, genre, description, None)
+    add_movie_object(m)
+    return m

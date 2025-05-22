@@ -178,6 +178,9 @@ class App(customtkinter.CTk):
         self.add_movie_button = customtkinter.CTkButton(self.add_movie_frame, command = self.add_movie, text="Add movie", font=customtkinter.CTkFont(size=15, weight="bold"))
         self.add_movie_button.grid(row=7, column=1, padx=20, pady=10, sticky = "ew", columnspan=2)
 
+        self.add_movie_button_web = customtkinter.CTkButton(self.add_movie_frame, command = self.get_movie_from_web, text="Add movie from web", font=customtkinter.CTkFont(size=15, weight="bold"), fg_color="Red")
+        self.add_movie_button_web.grid(row=8, column=1, padx=20, pady=10, sticky = "ew", columnspan=2)
+
         #movieframe
         self.movie_frame = customtkinter.CTkScrollableFrame(self, corner_radius=0, fg_color="transparent")
         self.select_frame_by_name("home")
@@ -357,8 +360,14 @@ class App(customtkinter.CTk):
         rew = Review(datetime.datetime.now(), self.user.id, self.current_movie, self.textbox.get('1.0', END), self.rating_slider.get()) #TODO language
         Utils.add_review(rew)
 
-
-
+    def get_movie_from_web(self):
+        try:
+            Utils.get_movie_from_web(self.movie_title_entry.get())
+        except Exception as e:
+             self.notification_manager.show_notification(str(e), NotifyType.ERROR, duration=1500)
+             return
+        self.notification_manager.show_notification(
+            "Movie added", NotifyType.SUCCESS, duration=1500)
     def add_to_watchlist(self):
         self.user.add_movie(self.current_movie)
     def remove_from_watchlist(self):
@@ -385,7 +394,7 @@ class App(customtkinter.CTk):
         director = next(x for x in Utils.get_all_directors() if x.name + ' ' + x.surname == self.movie_director_option.get())
         description = self.movie_description_entry.get("1.0", "end").strip()
         try:
-            movie = Movie(title, director,  year, genre, description) #TODO
+            movie = Movie(title, director,  year, genre, description, None)
         except (EmptyEntry,TypeError, ValueError) as e:
             return self.notification_manager.show_notification(
                 str(e), NotifyType.ERROR, duration=1500)
