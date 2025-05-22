@@ -20,6 +20,15 @@ class Movie:
     def title(self):
         return self._title
 
+    @property
+    def grade(self):
+        return self._grade
+
+    @grade.setter
+    def grade(self, value):
+        self._grade = round(value, 2)
+
+
     @title.setter
     def title(self, value):
         if not value:
@@ -60,6 +69,8 @@ class Movie:
 
     def get_values(self):
         return [self.title, self.director, self.release_year, self.genre, self.grade, self.description]
+    def get_string_values(self):
+        return [self.title, self.director.full_name(), str(self.release_year), self.genre.name, str(self.grade), self.description, str(self.watched)]
 
     def print_reviews(self):
         print(self.title + " reviews: ")

@@ -4,7 +4,6 @@ from tkinter import END
 from PIL import Image, ImageTk
 import customtkinter
 from CTkTable import *
-from customtkinter import CTkCheckBox, CTkButton
 
 from CTkFloatingNotifications import NotificationManager, NotifyType
 import Utils
@@ -12,6 +11,7 @@ from Objects.Errors import EmptyEntry
 from Objects.Movie import Movie
 from Objects.Review import Review
 from gui_elements.home import Home
+from gui_elements.watchlist import Watchlist
 
 
 class App(customtkinter.CTk):
@@ -130,10 +130,7 @@ class App(customtkinter.CTk):
         self.load_director_checkboxes()
 
         # watchlist
-        self.watchlist_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
-        self.watchlist_frame.grid_columnconfigure(0, weight=1)
-        self.watchlist = customtkinter.CTkLabel(self.watchlist_frame, text="Your watchlist")
-        self.watchlist.grid(row=1, column=0, padx=20, pady=10)
+        self.watchlist_frame = Watchlist(self, user)
 
         self.load_watchlist()
 
@@ -406,7 +403,7 @@ class App(customtkinter.CTk):
         for r in respond:
             value.append(r.get_values()[:-1])
         if self.table is not None:
-            self.table.grid_forget()
+            self.table.grid_remove()
         self.table = CTkTable(self.second_frame, row=len(respond) + 1, values=value, wraplength=2000,
                               command=self.movie_id)
         self.table.grid(row=2, column=0, padx=20, pady=20, columnspan=2, sticky="new")
@@ -529,7 +526,7 @@ class App(customtkinter.CTk):
             table_data.append(to_append)
 
 
-        self.table = CTkTable(self.watchlist_frame, row=len(table_data) + 1, values=table_data,
+        self.table = CTkTable(self.watchlist_frame, row=len(table_data), values=table_data,
                               wraplength=2000)
         self.table.grid(row=2, column=0, padx=20, pady=20, columnspan=2, sticky="new")
 

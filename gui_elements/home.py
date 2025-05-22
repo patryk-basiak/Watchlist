@@ -43,7 +43,7 @@ class Home(customtkinter.CTkFrame):
         recommended_movie = Utils.get_recommended_movie(user)
         recommendation_label = customtkinter.CTkLabel(
             self,
-            text=f"⭐ Today’s recommendation: {recommended_movie.title}",
+            text=f"⭐ Your recommendation: {recommended_movie.title}",
             font=("Arial", 14, "italic"),
             text_color="lightblue"
         )
