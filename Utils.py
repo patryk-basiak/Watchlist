@@ -248,7 +248,10 @@ def get_movie_from_web(param):
     apikey = "REMOVED"
     x = requests.get(f'https://www.omdbapi.com/?t={param}&apikey={apikey}')
     js = x.json()
-    title = js['Title']
+    try:
+        title = js['Title']
+    except Exception as e:
+        raise "Fetching error"
     director = None
     year = js['Released'].split()[-1]
     genre = None
@@ -304,3 +307,30 @@ def set_checkbox(current_movie, param, user):
         cursor = connection.cursor()
         cursor.execute(sql, (user.id, current_movie.id))
         connection.commit()
+def get_genre_from_watchlist(user):
+    result = {}
+    connection = sqlite3.connect("watchlist.db")
+    cursor = connection.cursor()
+    query = "SELECT name from Movies INNER JOIN main.genres g on g.id = Movies.genre_id inner join main.User_Movie UM on Movies.id = UM.movieID inner join main.User U on U.id = UM.userID where U.id =?"
+    cursor.execute(query, (user.id,))
+    rows = cursor.fetchall()
+    for row in rows:
+        if row[0] in result:
+            result[row[0]] += 1
+        else:
+            result[row[0]] = 1
+    connection.close()
+    return result
+
+def get_recommended_movie(user):
+    r = get_genre_from_watchlist(user)
+    genre = max(r, key=r.get)
+
+    rating = -1
+    temp_movie = None
+    for movie in movie_list:
+        if str(movie.genre) == genre:
+            if rating < movie.grade:
+                temp_movie = movie
+                rating = movie.grade
+    return temp_movie

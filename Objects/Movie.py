@@ -49,6 +49,11 @@ class Movie:
 
     def add_review(self, review):
         self.reviews.append(review)
+        suma = 0
+        for x in self.reviews:
+            suma += x.rating
+        self.grade = suma/len(self.reviews)
+
 
     def delete_review(self, review):
         self.reviews.remove(review)

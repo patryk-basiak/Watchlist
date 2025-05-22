@@ -17,6 +17,7 @@ class Genre:
     def __str__(self):
         return self.name
 
+    @staticmethod
     def genre_from_name(name):
         for genre in Genre.genres_by_id.values():
             if genre.name.lower() == name.lower():
