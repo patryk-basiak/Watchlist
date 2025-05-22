@@ -326,7 +326,7 @@ class App(customtkinter.CTk):
         self.get_movie_inf(Utils.get_last_respond()[val-1])
 
     def post_review(self):
-        rew = Review(99, datetime.datetime.now(), self.user.id,self.current_movie, self.textbox.get('1.0', END), self.rating_slider.get()) #TODO language
+        rew = Review(datetime.datetime.now(), self.user.id, self.current_movie, self.textbox.get('1.0', END), self.rating_slider.get()) #TODO language
         Utils.add_review(rew)
 
 

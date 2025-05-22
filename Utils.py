@@ -30,7 +30,8 @@ def load_data_from_database():
         d.id, d.name, d.surname,
         m.release_year,
         g.id, g.name,
-        m.description
+        m.description,
+        m.id
     FROM movies m
     JOIN directors d ON m.director_id = d.id
     JOIN genres g ON m.genre_id = g.id;
@@ -46,8 +47,9 @@ def load_data_from_database():
         release_year = row[4]
         genre = Genre(name=row[6], genre_id=row[5])
         description = row[7]
+        id_n = row[8]
 
-        movie = Movie(title, director, release_year, genre, description)
+        movie = Movie(title, director, release_year, genre, description, id_n)
         movies.append(movie)
     for movie in movies:
         query = '''
@@ -168,6 +170,7 @@ def add_review(rew):
     connection = sqlite3.connect("watchlist.db")
     sql = "INSERT INTO Review(date, user_id,movie_id, text, rating, lang) VALUES(?,?,?,?,?,? )"
     cursor = connection.cursor()
-    cursor.execute(sql, (datetime.datetime.now(), rew.user, rew.movie.id, rew.text, rew.rating, rew.lang))
+    print(type(rew.text))
+    cursor.execute(sql, (rew.date, rew.user, rew.movie.id, rew.text, rew.rating, rew.lang))
     connection.commit()
     rew.movie.add_review(rew)

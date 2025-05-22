@@ -4,15 +4,14 @@ from Objects.Errors import EmptyEntry
 
 class Movie:
     number = 0
-    def __init__(self, title, director, release_year, genre, description, grade=0):
+    def __init__(self, title, director, release_year, genre, description, no, grade=0):
         self.title = title
         self.director = director
         self.release_year = release_year
         self.genre = genre
         self.description = description
         self.grade = grade
-        self.id = Movie.number
-        Movie.number += 1
+        self.id = no
         self.reviews = []
         self.title_properties = title.split()
 
