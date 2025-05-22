@@ -4,6 +4,8 @@ from tkinter import END
 from PIL import Image, ImageTk
 import customtkinter
 from CTkTable import *
+from customtkinter import CTkCheckBox, CTkButton
+
 from CTkFloatingNotifications import NotificationManager, NotifyType
 import Utils
 from Objects.Errors import EmptyEntry
@@ -133,8 +135,10 @@ class App(customtkinter.CTk):
         # watchlist
         self.watchlist_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
         self.watchlist_frame.grid_columnconfigure(0, weight=1)
-        self.watchlist = customtkinter.CTkLabel(self.watchlist_frame, text=self.display_watchlist())
+        self.watchlist = customtkinter.CTkLabel(self.watchlist_frame, text="You're watchlist")
         self.watchlist.grid(row=1, column=0, padx=20, pady=10)
+
+        self.load_watchlist()
 
         #addmovie
         self.add_movie_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
@@ -181,13 +185,13 @@ class App(customtkinter.CTk):
         self.geometry("1440x480")
         self.title("WatchList")
 
-        #logo
+        # logo
         self.logo = Image.open("Assets/Logo.png")
         self.ctk_logo = customtkinter.CTkImage(self.logo, size=(125, 26))
         self.add_logo = customtkinter.CTkLabel(self, image=self.ctk_logo, text="")
         self.add_logo.grid(row=0, column=0, padx=20, pady=17, sticky = "n")
 
-        #programIcon
+        # programIcon
         self.icon = tkinter.PhotoImage(file ="Assets/WatchListIcon.png")
         self.iconphoto(True, self.icon)
 
@@ -228,8 +232,7 @@ class App(customtkinter.CTk):
 
     def watchlist_event(self):
         self.watchlist_frame.grid_forget()
-        self.watchlist = customtkinter.CTkLabel(self.watchlist_frame, text=self.display_watchlist())
-        self.watchlist.grid(row=1, column=0, padx=20, pady=10)
+        self.load_watchlist()
         self.select_frame_by_name("frame_3")
 
     def frame_4_button_event(self):
@@ -274,7 +277,7 @@ class App(customtkinter.CTk):
                                             font=customtkinter.CTkFont(size=20, weight="bold"))
         self.genre.grid(row=3, column=0, padx=20, pady=10, sticky="nsew", columnspan=3)
 
-        a = next((x for x in self.user.watch_list if x == movie), None)
+        a = next((x for x in self.user.watch_list if x[0] == movie), None)
         if a is not None:
             self.button_add = customtkinter.CTkButton(self.movie_frame, text="Remove from watchlist",
                                                       command=self.remove_from_watchlist,
@@ -331,6 +334,7 @@ class App(customtkinter.CTk):
     def add_to_watchlist(self):
         self.user.add_movie(self.current_movie)
     def remove_from_watchlist(self):
+
         self.user.delete_movie(self.current_movie)
 
     def sort(self, var):
@@ -446,4 +450,26 @@ class App(customtkinter.CTk):
             result = [m for m in all_movies if m.director.full_name() in selected_director]
 
         self.load_table(result)
+
+    def load_watchlist(self):
+
+        table_data = [["Title", "Director", "Release year", "Genre", "Rating", 'Watched']]
+        watchlist = Utils.get_user_watchlist(self.user)
+
+        if len(watchlist) == 0:
+            return #TODO
+
+        for r in watchlist:
+            to_append = r[0].get_values()[:-1]
+            if not r[1]:
+                to_append.append("No")
+            else:
+                to_append.append("Yes")
+            table_data.append(to_append)
+
+
+        self.table = CTkTable(self.watchlist_frame, row=len(table_data) + 1, values=table_data,
+                              wraplength=2000)
+        self.table.grid(row=2, column=0, padx=20, pady=20, columnspan=2, sticky="new")
+
 
