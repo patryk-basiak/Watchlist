@@ -3,7 +3,6 @@ from Objects.Errors import EmptyEntry
 
 
 class Movie:
-    number = 0
     def __init__(self, title, director, release_year, genre, description, no, grade=0, watched=False):
         self.title = title
         self.director = director
@@ -24,6 +23,7 @@ class Movie:
     @property
     def title(self):
         return self._title
+
 
     @property
     def grade(self):
@@ -46,6 +46,8 @@ class Movie:
 
     @release_year.setter
     def release_year(self, value):
+        if not value:
+            raise EmptyEntry("Release year is empty")
         try:
             new_value = int(value)
         except (TypeError, ValueError):
@@ -73,6 +75,12 @@ class Movie:
 
     def delete_review(self, review):
         self.reviews.remove(review)
+        if len(self.reviews) == 0:
+            self.grade = 0
+        else:
+            review_count = len(self.reviews)
+            temp_sum = self.grade * review_count
+            self.grade = (temp_sum - review.rating  ) / review_count
 
     def get_values(self):
         return [self.title, self.director, self.release_year, self.genre, self.grade, self.description]

@@ -333,7 +333,7 @@ class App(customtkinter.CTk):
         for i, x in enumerate(self.current_movie.reviews):
 
             review_frame = customtkinter.CTkFrame(self.movie_frame, corner_radius=10, fg_color="#2a2a2a")
-            review_frame.grid(row=8 + i, column=0, columnspan=3, padx=20, pady=10, sticky="we")
+            review_frame.grid(row=9 + i, column=0, columnspan=3, padx=20, pady=10, sticky="we")
 
             review_frame.grid_columnconfigure(1, weight=1)
 
@@ -443,7 +443,7 @@ class App(customtkinter.CTk):
             return self.notification_manager.show_notification(
                 str(e), NotifyType.ERROR, duration=1500)
         try:
-            Utils.add_movie_object(movie)
+            Utils.add_movie(movie)
         except Exception as e:
             return self.notification_manager.show_notification(
                 str(e), NotifyType.ERROR),
@@ -545,8 +545,17 @@ class App(customtkinter.CTk):
     def checkbox_watched(self):
         Utils.set_checkbox(self.current_movie, self.watched_var.get(), self.user)
 
-    def delete_review(self, id):
-        pass #TODO
+    def delete_review(self, review):
+        try:
+            Utils.delete_review(review)
+        except Exception as e:
+            self.notification_manager.show_notification(
+                str(e), NotifyType.ERROR, duration=1500)
+            return
+        self.movie_frame_event()
+        self.get_movie_inf(Utils.get_last_respond()[self.val - 1])
+        self.notification_manager.show_notification(
+            "Review Deleted", NotifyType.SUCCESS, duration=1500)
 
     def report_review(self, x):
         pass #TODO

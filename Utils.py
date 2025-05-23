@@ -7,6 +7,7 @@ from urllib.parse import quote
 
 from Objects import User
 from Objects.Director import Director
+from Objects.Errors import MovieAlreadyExists
 from Objects.Genre import Genre
 from Objects.Movie import Movie
 from Objects.Review import Review
@@ -133,14 +134,6 @@ def find_movie_by_title(title) -> list[Movie] or None:
 def get_user_watchlist(user:User) -> list[[Movie, DateTime]]:
     return user.watch_list
 
-
-def add_movie(title=None,director=None, release_year=None, genre_id=None, short_description=None):
-    global movie_list
-    movie = Movie(title, director, release_year, genre_id, short_description, -1)
-    movie_list.append(movie)
-    save_movie(movie)
-
-
 def get_movie_list():
     return movie_list
 
@@ -168,21 +161,16 @@ def sort_by(var):
     return val
 
 
-def add_movie_object(movie):
+def add_movie(movie: Movie) -> None:
     global movie_list
+    if check_movie_exists(movie):
+        raise MovieAlreadyExists("Movie with that attributes already exists")
     connection = sqlite3.connect("watchlist.db")
     sql = "INSERT INTO movies(title,director_id,release_year, genre_id, description) VALUES(?,?,?,?,? )"
     cursor = connection.cursor()
     cursor.execute(sql, (movie.title, movie.director.id, movie.release_year, movie.genre.id, movie.description))
     connection.commit()
     movie_list.append(movie)
-
-
-def save_movie(movie):
-    global file
-    with open(file, "a") as file:
-        file.write(';'.join(movie.get_values()))
-    print("Movie save to txt file")
 
 def get_all_genres():
     connection = sqlite3.connect("watchlist.db")
@@ -206,7 +194,7 @@ def get_all_directors():
 
 def add_review(rew):
     connection = sqlite3.connect("watchlist.db")
-    sql = "INSERT INTO Review(date, user_id,movie_id, text, rating, lang) VALUES(?,?,?,?,?,? )"
+    sql = "INSERT INTO Review(date, user_id, movie_id, text, rating, lang) VALUES(?,?,?,?,?,? )"
     cursor = connection.cursor()
     cursor.execute(sql, (rew.date, rew.user, rew.movie.id, rew.text, rew.rating, rew.lang))
     connection.commit()
@@ -275,7 +263,7 @@ def get_movie_from_web(param):
 
     description = js['Plot']
     m = Movie(title, director, year, genre, description, None)
-    add_movie_object(m)
+    add_movie(m)
     return m
 
 
@@ -307,7 +295,7 @@ def set_checkbox(current_movie, param, user) -> None:
 
     else:
         connection = sqlite3.connect("watchlist.db")
-        sql = "DELETE FROM Watched WHERE userId, movieId "
+        sql = "DELETE FROM Watched WHERE userId = ? and  movieId = ? "
         cursor = connection.cursor()
         cursor.execute(sql, (user.id, current_movie.id))
         connection.commit()
@@ -391,3 +379,37 @@ def apply_director_filer(selected_director :[Director]) -> [Movie]:
         result = [m for m in all_movies if m.director.full_name() in selected_director]
     res = result
     return res
+
+
+def delete_review(review):
+    connection = sqlite3.connect("watchlist.db")
+    sql = "DELETE FROM Review WHERE user_id = ? and movie_id = ?"
+    cursor = connection.cursor()
+    if type(review.movie) == int:
+        cursor.execute(sql, (review.user, review.movie))
+    else:
+        cursor.execute(sql, (review.user, review.movie.id))
+    connection.commit()
+    movie = None
+    if type(review.movie) == int:
+        for m in movie_list:
+            if m.id == review.movie:
+                movie = m
+                break
+    else:
+        for m in movie_list:
+            if m.id == review.movie.id:
+                movie = m
+                break
+    if movie is None:
+        raise ValueError("Movie with that id not found")
+    movie.delete_review(review)
+    del review
+
+def check_movie_exists(movie : Movie) -> bool:
+    for m in movie_list:
+        if movie.get_string_values() == m.get_values():
+            return True
+
+    return False
+
