@@ -381,6 +381,7 @@ class App(customtkinter.CTk):
 
     def movie_id(self, row):
         val = int(list(dict(row).values())[0])
+        print(val)
         if val < 1:
             return
         self.val = val
@@ -416,11 +417,17 @@ class App(customtkinter.CTk):
 
     def load_table(self, respond):
         value = [["Title","Director", "Release year", "Genre", "Rating"]]
+
+        if len(respond) > 10:
+            print("works")
+            respond = respond[:10]
         for r in respond:
             value.append(r.get_values()[:-1])
         if self.table is not None:
             self.table.grid_remove()
-        self.table = CTkTable(self.second_frame, row=len(respond) + 1, values=value, wraplength=2000,
+        if len(respond) == 0:
+            return
+        self.table = CTkTable(self.second_frame, row=len(value), values=value, wraplength=2000,
                               command=self.movie_id)
         self.table.grid(row=2, column=0, padx=20, pady=20, columnspan=2, sticky="new")
 
@@ -476,7 +483,7 @@ class App(customtkinter.CTk):
 
     def apply_genre_filter(self):
         selected_genres = [g.name for g, var in self.checkbox_vars.items() if var.get()]
-        all_movies = Utils.get_movie_list()
+        all_movies = Utils.get_last_respond()
 
         if not selected_genres:
             result = all_movies
@@ -514,7 +521,7 @@ class App(customtkinter.CTk):
 
     def apply_director_filter(self):
         selected_director = [d.full_name() for d, var in self.director_checkbox_vars.items() if var.get()]
-        all_movies = Utils.get_movie_list()
+        all_movies = Utils.get_last_respond()
 
         if not selected_director:
             result = all_movies
@@ -534,11 +541,11 @@ class App(customtkinter.CTk):
 
         for r in watchlist:
             to_append = r[0].get_values()[:-1]
-            to_append.append(r[1].strftime("%d.%m.%Y %H:%M "))
             if r[0].watched:
                 to_append.append("Yes")
             else:
                 to_append.append("No")
+            to_append.append(r[1].strftime("%d.%m.%Y %H:%M "))
             table_data.append(to_append)
 
 

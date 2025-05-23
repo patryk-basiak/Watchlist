@@ -116,9 +116,11 @@ def find_movie_by_title(title):
             continue
         else:
             for param in x.title_properties:
-                if param.lower() == title:
+                if ''.join(char for char in param.lower() if char.isalnum() or char == ' ') == title:
                     result.append(x)
                     continue
+            if jaro_find(x.title.lower(), title) > 0.85:
+                result.append(x)
 
     if len(result) >= 0:
         res = result
@@ -301,12 +303,14 @@ def set_checkbox(current_movie, param, user):
         cursor = connection.cursor()
         cursor.execute(sql, (user.id, current_movie.id))
         connection.commit()
+
     else:
         connection = sqlite3.connect("watchlist.db")
         sql = "DELETE FROM Watched WHERE userId, movieId "
         cursor = connection.cursor()
         cursor.execute(sql, (user.id, current_movie.id))
         connection.commit()
+    current_movie.watched = param
 def get_genre_from_watchlist(user):
     result = {}
     connection = sqlite3.connect("watchlist.db")
@@ -334,3 +338,28 @@ def get_recommended_movie(user):
                 temp_movie = movie
                 rating = movie.grade
     return temp_movie
+
+def jaro_find(s1, s2):
+    if s1 == s2:
+        return 1
+    m = 0
+    t = 0
+    s_p = 0
+    prefix = True
+    for i, e in enumerate(s2):
+        if e in s1:
+            m += 1
+            if i < len(s1) and e == s1[i]:
+                if prefix:
+                    s_p += 1
+                t += 1
+            else:
+                prefix = False
+    if m == 0:
+        return 0
+    t = (len(s2) - t) / 2
+    result = 1 / 3 * (m / len(s1) + m / len(s2) + ((m - t) / m))
+
+    l = s_p
+    result += l * 0.1 * (1 - result)
+    return result
