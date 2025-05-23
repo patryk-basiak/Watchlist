@@ -14,6 +14,11 @@ class Movie:
         self.id = no
         self.reviews = []
         self.title_properties = title.split()
+        cleaned_properties = []
+        for prop in self.title_properties:
+            cleaned_prop = ''.join(char for char in prop.lower() if char.isalnum() or char == ' ')
+            cleaned_properties.append(cleaned_prop)
+        self.title_properties = cleaned_properties
         self.watched = watched
 
     @property

@@ -1,10 +1,11 @@
 import datetime
-import shutil
 import sqlite3
-from tkinter.font import names
+from xmlrpc.client import DateTime
 
 import requests
 from urllib.parse import quote
+
+from Objects import User
 from Objects.Director import Director
 from Objects.Genre import Genre
 from Objects.Movie import Movie
@@ -15,8 +16,8 @@ res = None
 
 def load_data(data):
     movies = []
-    with open(data, "r") as file:
-        for line in file:
+    with open(data, "r") as f:
+        for line in f:
             s = line.split(";")
             movies.append(Movie(s[0], int(s[1]), Genre.genre_from_id(s[2]), s[3], s[4]))
     return movies
@@ -106,7 +107,7 @@ def load_watchlist(user):
         parsed_date = datetime.datetime.strptime(row[2], "%Y-%m-%d %H:%M:%S.%f")
         user.watch_list.append([next(x for x in movie_list if x.id == row[1]), parsed_date])
 
-def find_movie_by_title(title):
+def find_movie_by_title(title) -> list[Movie] or None:
     title = title.lower()
     global res
     result = []
@@ -116,7 +117,7 @@ def find_movie_by_title(title):
             continue
         else:
             for param in x.title_properties:
-                if ''.join(char for char in param.lower() if char.isalnum() or char == ' ') == title:
+                if param == title:
                     result.append(x)
                     continue
             if jaro_find(x.title.lower(), title) > 0.85:
@@ -129,13 +130,13 @@ def find_movie_by_title(title):
         return None
 
 
-def get_user_watchlist(user):
+def get_user_watchlist(user:User) -> list[[Movie, DateTime]]:
     return user.watch_list
 
 
 def add_movie(title=None,director=None, release_year=None, genre_id=None, short_description=None):
     global movie_list
-    movie = Movie(title, director, release_year, genre_id, short_description)
+    movie = Movie(title, director, release_year, genre_id, short_description, -1)
     movie_list.append(movie)
     save_movie(movie)
 
@@ -155,7 +156,7 @@ def sort_by(var):
     if var == "Title":
         val = sorted(get_last_respond(), key=lambda x: x.title)
     elif var == "Director":
-        val = sorted(get_last_respond(), key=lambda x: x.director)
+        val = sorted(get_last_respond(), key=lambda x: x.director.surname)
     elif var == "Year":
         val = sorted(get_last_respond(), key=lambda x: x.release_year)
     elif var == "Genre":
@@ -278,7 +279,7 @@ def get_movie_from_web(param):
     return m
 
 
-def add_movie_to_watchlist(current_movie, user):
+def add_movie_to_watchlist(current_movie, user) -> None:
     connection = sqlite3.connect("watchlist.db")
     sql = "INSERT INTO User_Movie(userID, movieID, date) VALUES(?,?,? )"
     cursor = connection.cursor()
@@ -287,7 +288,7 @@ def add_movie_to_watchlist(current_movie, user):
     connection.commit()
     user.add_movie(current_movie,date)
 
-def remove_from_watchlist(movie, user):
+def remove_from_watchlist(movie, user) -> None:
     connection = sqlite3.connect("watchlist.db")
     sql = "DELETE FROM User_Movie WHERE userId = ? and movieId = ?"
     cursor = connection.cursor()
@@ -296,7 +297,7 @@ def remove_from_watchlist(movie, user):
     user.delete_movie(movie)
 
 
-def set_checkbox(current_movie, param, user):
+def set_checkbox(current_movie, param, user) -> None:
     if param:
         connection = sqlite3.connect("watchlist.db")
         sql = "INSERT INTO Watched(userID, movieID) VALUES(?,? )"
@@ -311,7 +312,8 @@ def set_checkbox(current_movie, param, user):
         cursor.execute(sql, (user.id, current_movie.id))
         connection.commit()
     current_movie.watched = param
-def get_genre_from_watchlist(user):
+
+def get_genre_from_watchlist(user:User) -> dict[str, int]:
     result = {}
     connection = sqlite3.connect("watchlist.db")
     cursor = connection.cursor()
@@ -326,7 +328,7 @@ def get_genre_from_watchlist(user):
     connection.close()
     return result
 
-def get_recommended_movie(user):
+def get_recommended_movie(user:User) -> Movie:
     r = get_genre_from_watchlist(user)
     genre = max(r, key=r.get)
 
@@ -339,7 +341,7 @@ def get_recommended_movie(user):
                 rating = movie.grade
     return temp_movie
 
-def jaro_find(s1, s2):
+def jaro_find(s1 :str, s2:str) -> float:
     if s1 == s2:
         return 1
     m = 0
@@ -363,3 +365,29 @@ def jaro_find(s1, s2):
     l = s_p
     result += l * 0.1 * (1 - result)
     return result
+
+def apply_genre_filer(selected_genres: [Genre])-> [Movie]:
+    global res
+    all_movies = res
+    if res is None:
+        all_movies = movie_list
+
+    if len(selected_genres) == 0:
+        result = movie_list
+    else:
+        result = [m for m in all_movies if m.genre.name in selected_genres]
+    res = result
+    return res
+
+def apply_director_filer(selected_director :[Director]) -> [Movie]:
+    global res
+    all_movies = res
+    if res is None:
+        all_movies = movie_list
+
+    if len(selected_director) == 0:
+        result = movie_list
+    else:
+        result = [m for m in all_movies if m.director.full_name() in selected_director]
+    res = result
+    return res

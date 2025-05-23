@@ -483,13 +483,8 @@ class App(customtkinter.CTk):
 
     def apply_genre_filter(self):
         selected_genres = [g.name for g, var in self.checkbox_vars.items() if var.get()]
-        all_movies = Utils.get_last_respond()
-
-        if not selected_genres:
-            result = all_movies
-        else:
-            result = [m for m in all_movies if m.genre.name in selected_genres]
-
+        result = Utils.apply_genre_filer(selected_genres)
+        self.table.grid_remove()
         self.load_table(result)
 
     def toggle_director_filter(self):
@@ -521,13 +516,7 @@ class App(customtkinter.CTk):
 
     def apply_director_filter(self):
         selected_director = [d.full_name() for d, var in self.director_checkbox_vars.items() if var.get()]
-        all_movies = Utils.get_last_respond()
-
-        if not selected_director:
-            result = all_movies
-        else:
-            print(selected_director)
-            result = [m for m in all_movies if m.director.full_name() in selected_director]
+        result = Utils.apply_director_filer(selected_director)
 
         self.load_table(result)
 
