@@ -557,5 +557,12 @@ class App(customtkinter.CTk):
         self.notification_manager.show_notification(
             "Review Deleted", NotifyType.SUCCESS, duration=1500)
 
-    def report_review(self, x):
-        pass #TODO
+    def report_review(self, review) -> None:
+        try:
+            Utils.report_review(review, self.user)
+        except Exception as e:
+            self.notification_manager.show_notification(
+                str(e), NotifyType.ERROR, duration=1500)
+            return
+        self.notification_manager.show_notification(
+            "Review Reported", NotifyType.SUCCESS, duration=1500)

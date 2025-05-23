@@ -1,13 +1,16 @@
 import datetime
+import smtplib
 import sqlite3
+from email.mime.text import MIMEText
 from xmlrpc.client import DateTime
-
+from dotenv import load_dotenv
+import os
 import requests
 from urllib.parse import quote
 
 from Objects import User
 from Objects.Director import Director
-from Objects.Errors import MovieAlreadyExists
+from Objects.Errors import MovieAlreadyExists, ReviewDoesntExist
 from Objects.Genre import Genre
 from Objects.Movie import Movie
 from Objects.Review import Review
@@ -90,7 +93,7 @@ WHERE movie_id = ?;
 
 file = 'films.txt'
 movie_list = load_data_from_database()
-
+load_dotenv()
 def load_watchlist(user):
     connection = sqlite3.connect("watchlist.db")
     cursor = connection.cursor()
@@ -145,7 +148,7 @@ def get_last_respond():
 
 
 def sort_by(var):
-    print(var)
+    global res
     if var == "Title":
         val = sorted(get_last_respond(), key=lambda x: x.title)
     elif var == "Director":
@@ -158,6 +161,7 @@ def sort_by(var):
         val = sorted(get_last_respond(), key=lambda x: x.grade, reverse=True)
     else:
         val = get_last_respond()
+    res = val
     return val
 
 
@@ -385,7 +389,7 @@ def delete_review(review):
     connection = sqlite3.connect("watchlist.db")
     sql = "DELETE FROM Review WHERE user_id = ? and movie_id = ?"
     cursor = connection.cursor()
-    if type(review.movie) == int:
+    if type(review.movie) == int: #napraw to kiedys patryk 
         cursor.execute(sql, (review.user, review.movie))
     else:
         cursor.execute(sql, (review.user, review.movie.id))
@@ -412,4 +416,38 @@ def check_movie_exists(movie : Movie) -> bool:
             return True
 
     return False
+def get_review_id(review: Review) -> int:
+    connection = sqlite3.connect("watchlist.db")
+    cursor = connection.cursor()
+    sql = "SELECT id FROM Review where user_id = ? and movie_id = ?"
+    cursor.execute(sql, (review.user, review.movie))
+    rows = cursor.fetchall()
+    if len(rows) == 0:
+        raise ReviewDoesntExist("review with that user_id and movie_id doesnt exists")
+    return rows[0][0]
+
+def report_review(review, user):
+    sender = os.getenv("email_address")
+    recipients = os.getenv("recipients")
+
+    movie_title = next((x.title for x in movie_list if x.id == review.movie), "Unknown Movie")
+    author_username = get_username_by_id(review.user) or "Unknown User"
+    reporting_user = user.login or "Unknown Reporter"
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    email_body = (
+        f"A review for the movie \"{movie_title}\" written by [{author_username}] "
+        f"was reported by user {reporting_user} on {timestamp}.\n\n"
+        f"Review ID: {get_review_id(review)}\n"
+        "Please review this report and take appropriate action if necessary."
+    )
+
+    msg = MIMEText(email_body)
+    msg['Subject'] = "Reported Review Notification"
+    msg['From'] = sender
+    msg['To'] = recipients
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp_server:
+        smtp_server.login(sender, os.getenv("password"))
+        smtp_server.sendmail(sender, recipients, msg.as_string())
+
 
