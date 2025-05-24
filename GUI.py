@@ -129,11 +129,14 @@ class App(customtkinter.CTk):
 
         self.load_director_checkboxes()
 
+        self.count_label = customtkinter.CTkLabel(self.second_frame, text=f"Displaying 10/{len(Utils.movie_list)} movies", font=customtkinter.CTkFont(size=12, slant="italic"),
+                text_color="#888888",)
+        self.count_label.grid(row=3,column=0, padx=10, pady=10, sticky="nsew", columnspan=3)
         # watchlist
         self.watchlist_frame = Watchlist(self, user)
 
         self.load_watchlist()
-
+        self.bind("<Return>", lambda event: self.find_movies())
         #addmovie
         self.add_movie_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
         self.add_movie_frame.grid_columnconfigure(0, weight=1)
@@ -250,7 +253,6 @@ class App(customtkinter.CTk):
             self.color = "white"
 
     def find_movies(self):
-        self.bind("<Return>", lambda event: self.find_movies())
         respond = Utils.find_movie_by_title(self.movie_entry.get())
         self.load_table(respond)
 
@@ -417,19 +419,21 @@ class App(customtkinter.CTk):
 
     def load_table(self, respond):
         value = [["Title","Director", "Release year", "Genre", "Rating"]]
-
+        count = len(respond)
         if len(respond) > 10:
-            print("works")
+            count = 10
             respond = respond[:10]
         for r in respond:
             value.append(r.get_values()[:-1])
         if self.table is not None:
             self.table.grid_remove()
         if len(respond) == 0:
+            self.count_label.configure(text=f"No movies found")
             return
         self.table = CTkTable(self.second_frame, row=len(value), values=value, wraplength=2000,
                               command=self.movie_id)
         self.table.grid(row=2, column=0, padx=20, pady=20, columnspan=2, sticky="new")
+        self.count_label.configure(text=f"Displaying {count}/{len(Utils.get_last_respond())} movies")
 
     def add_movie(self):
         title = self.movie_title_entry.get()
