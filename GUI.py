@@ -89,7 +89,8 @@ class App(customtkinter.CTk):
         self.sort_info = customtkinter.CTkLabel(self.second_frame, text="Sort by", font=customtkinter.CTkFont(size=20, weight="bold"))
         self.sort_info.grid(row=2,column=2, padx=20, pady=0, sticky="new")
 
-        self.sort = customtkinter.CTkComboBox(self.second_frame, values=["Default","Director", "Year", "Title", "Genre", "Rating"],font=customtkinter.CTkFont(size=15, weight="bold"), command=self.sort)
+        self.sort = customtkinter.CTkComboBox(self.second_frame, values=["Default","Director", "Year", "Title", "Genre", "Rating"],font=customtkinter.CTkFont(size=15, weight="bold"), command=self.sort, state="readonly")
+        self.sort.set("Default")
         self.sort.grid(row=2,column=2, padx=20, pady=30, sticky="new")
 
         self.filter_by = customtkinter.CTkLabel(self.second_frame, text="Filter by", font=customtkinter.CTkFont(size=20, weight="bold"))

@@ -320,7 +320,7 @@ def get_genre_from_watchlist(user:User) -> dict[str, int]:
     connection.close()
     return result
 
-def get_recommended_movie(user:User) -> Movie:
+def get_recommended_movie(user:User) -> Movie or None:
     r = get_genre_from_watchlist(user)
     genre = max(r, key=r.get)
 
@@ -328,9 +328,14 @@ def get_recommended_movie(user:User) -> Movie:
     temp_movie = None
     for movie in movie_list:
         if str(movie.genre) == genre:
-            if rating < movie.grade:
+            if not movie.watched and rating < movie.grade:
                 temp_movie = movie
                 rating = movie.grade
+    new_list = sorted(movie_list, key=lambda x: x.grade, reverse=True)
+    if not temp_movie:
+        temp_movie = next(x for x in new_list if not x.watched)
+    if not temp_movie:
+        temp_movie = new_list[0]
     return temp_movie
 
 def jaro_find(s1 :str, s2:str) -> float:
