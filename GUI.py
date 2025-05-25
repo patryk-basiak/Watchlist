@@ -183,7 +183,7 @@ class App(customtkinter.CTk):
         self.movie_frame = customtkinter.CTkScrollableFrame(self, corner_radius=0, fg_color="transparent")
         self.select_frame_by_name("home")
 
-        self.geometry("1440x480")
+        self.geometry("1440x600")
         self.title("WatchList")
 
         # logo
