@@ -462,6 +462,9 @@ def get_user_watchlist_watched(user):
     result = {"True" : 0, "False":0 }
     for movie, date in user.watch_list:
         result[str(movie.watched)] += 1
+
+    result["Yes"] = result.pop("True")
+    result["No"] = result.pop("False")
     return result
 
 
@@ -479,6 +482,17 @@ def get_the_best_genre():
     for v in result:
         result[v] = result[v]/temp[v]
     return result
+
+def update_movie(movie):
+    connection = sqlite3.connect("watchlist.db")
+    cursor = connection.cursor()
+    cursor.execute("""
+        UPDATE movies
+        SET title = ?, release_year = ?, description = ?
+        WHERE title = ? AND release_year = ?
+    """, (movie.title, movie.release_year, movie.description, movie.title, movie.release_year))
+    connection.commit()
+    connection.close()
 
 
 def get_image(language):

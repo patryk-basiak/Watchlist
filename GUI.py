@@ -76,12 +76,12 @@ class App(customtkinter.CTk):
         self.second_frame = customtkinter.CTkScrollableFrame(self, corner_radius=0, fg_color="transparent")
         self.second_frame.grid_columnconfigure(0,weight=1)
         self.second_frame.grid_columnconfigure(1,weight=1)
-        self.second_frame.grid_columnconfigure(2,weight=1)
+        self.second_frame.grid_columnconfigure(2,weight=5)
 
         self.search = customtkinter.CTkLabel(self.second_frame, text="Search", font=customtkinter.CTkFont(size=20, weight="bold"))
         self.search.grid(row=1,column=0, padx=20, pady=10, sticky="e")
         self.movie_entry = customtkinter.CTkEntry(self.second_frame, width=700)
-        self.movie_entry.grid(row=1, column=1, padx=20, pady=10,sticky="ew")
+        self.movie_entry.grid(row=1, column=1, padx=20, pady=10,sticky="w")
 
         self.find_button = customtkinter.CTkButton(self.second_frame, command=self.find_movies, text="Search", font=customtkinter.CTkFont(size=15, weight="bold"), width=100)
         self.find_button.grid(row=1, column=2, padx=20, pady=10, sticky="ew")
@@ -105,7 +105,7 @@ class App(customtkinter.CTk):
         self.genre_filter_button.grid(row=2, column=2, padx=10, pady=100, sticky="new")
 
         self.genre_filter_frame = customtkinter.CTkFrame(self.second_frame)
-        self.genre_filter_frame.grid(row=2, column=2, padx=10, pady=140, sticky="new")
+        self.genre_filter_frame.grid(row=2, column=2, padx=20, pady=140, sticky="new")
         self.genre_filter_frame.grid_remove()
 
         self.checkbox_vars = {}
@@ -125,7 +125,7 @@ class App(customtkinter.CTk):
         self.director_filter_button.grid(row=2, column=2, padx=10, pady=160, sticky="new")
 
         self.director_filter_frame = customtkinter.CTkFrame(self.second_frame)
-        self.director_filter_frame.grid(row=2, column=2, padx=10, pady=200, sticky="new")
+        self.director_filter_frame.grid(row=2, column=2, padx=20, pady=200, sticky="new")
         self.director_filter_frame.grid_remove()
 
         self.load_director_checkboxes()
@@ -245,7 +245,6 @@ class App(customtkinter.CTk):
         self.movie_frame.grid_columnconfigure(0, weight=1)
         self.select_frame_by_name("movie_frame")
 
-
     def change_appearance_mode_event(self,new_appearance_mode):
         customtkinter.set_appearance_mode(new_appearance_mode)
         if customtkinter.get_appearance_mode() == "Dark":
@@ -281,6 +280,11 @@ class App(customtkinter.CTk):
         else:
             self.is_watched.deselect()
         self.is_watched.grid(row=1, column=0, padx=20, pady=10, sticky="w",columnspan=3)
+
+        self.edit_button = customtkinter.CTkButton(self.movie_frame, text="Edit movie",
+                                                   font=customtkinter.CTkFont(size=20, weight="bold"),
+                                                   command=self.edit_movie)
+        self.edit_button.grid(row=1, column=0, padx=20, pady=10, sticky="e",columnspan=3)
 
         self.year = customtkinter.CTkLabel(self.movie_frame, text=f"Release year: {movie.release_year}",
                                            font=customtkinter.CTkFont(size=20, weight="bold"))
@@ -320,7 +324,7 @@ class App(customtkinter.CTk):
             self.stars_label = customtkinter.CTkLabel(self.movie_frame, text="★★★☆☆",
                                                       font=customtkinter.CTkFont(size=20, weight="bold"),
                                                       text_color="#FFD700")
-            self.stars_label.grid(row=6, column=1, padx=20, pady=0, sticky="s")
+            self.stars_label.grid(row=6, column=1, padx=20, pady=10, sticky="s")
 
             self.rating = customtkinter.CTk
 
@@ -532,7 +536,7 @@ class App(customtkinter.CTk):
                 variable=var,
                 command=self.apply_director_filter
             )
-            cb.grid(row=i, column=2, sticky="new", pady=1)
+            cb.grid(row=i, column=2, sticky="nw", pady=1)
             self.director_checkbox_vars[director] = var
             self.director_checkboxes.append(cb)
 
@@ -588,3 +592,47 @@ class App(customtkinter.CTk):
             return
         self.notification_manager.show_notification(
             "Review Reported", NotifyType.SUCCESS, duration=1500)
+
+    def edit_movie(self):
+        self.edit_frame = customtkinter.CTkToplevel(self)
+        self.edit_frame.title("Edit Movie")
+        self.edit_frame.geometry("400x350")
+        self.edit_frame.attributes("-topmost", True)
+        self.edit_frame.resizable(False, False)
+        self.edit_frame.grid_columnconfigure(0,weight=1)
+        self.edit_frame.grid_columnconfigure(1,weight=1)
+
+        customtkinter.CTkLabel(self.edit_frame, text="Edit title",font=customtkinter.CTkFont(size=20, weight="bold")
+                               ).grid(row=0, column=0, padx=10, pady=10, sticky="e")
+        title_entry = customtkinter.CTkEntry(self.edit_frame)
+        title_entry.insert(0, self.current_movie.title)
+        title_entry.grid(row=0, column=1, padx=10, pady=10, sticky="ew")
+
+        customtkinter.CTkLabel(self.edit_frame, text="Edit year", font=customtkinter.CTkFont(size=20, weight="bold")
+                               ).grid(row=1, column=0, padx=10, pady=10, sticky="e")
+        year_entry = customtkinter.CTkEntry(self.edit_frame)
+        year_entry.insert(0, str(self.current_movie.release_year))
+        year_entry.grid(row=1, column=1, padx=10, pady=10, sticky="we")
+
+        customtkinter.CTkLabel(self.edit_frame, text="Edit description", font=customtkinter.CTkFont(size=20, weight="bold")
+                               ).grid(row=2, column=0, padx=10, pady=10,sticky="nwe", columnspan=2)
+        desc_entry = customtkinter.CTkTextbox(self.edit_frame, height=100)
+        desc_entry.insert("0.0", self.current_movie.description)
+        desc_entry.grid(row=3, column=0, padx=10, pady=10, sticky="new", columnspan=2)
+
+        def save_changes():
+            try:
+                self.current_movie.title = title_entry.get()
+                self.current_movie.release_year = int(year_entry.get())
+                self.current_movie.description = desc_entry.get("1.0", "end").strip()
+                Utils.update_movie(self.current_movie)
+                self.notification_manager.show_notification("Movie updated", NotifyType.SUCCESS, duration=1500)
+                self.edit_frame.destroy()
+                self.movie_frame_event()
+                self.get_movie_inf(self.current_movie)
+            except Exception as e:
+                self.notification_manager.show_notification(str(e), NotifyType.ERROR, duration=1500)
+
+        save_button = customtkinter.CTkButton(self.edit_frame, text="Save changes", command=save_changes)
+        save_button.grid(row=4, column=0, padx=10, pady=20, sticky="ew", columnspan=2)
+

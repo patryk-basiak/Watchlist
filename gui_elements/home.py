@@ -135,7 +135,7 @@ class Home(customtkinter.CTkFrame):
         ax.set_facecolor('black')
         bars = ax.bar(dane.keys(), dane.values(), color=kolory)
 
-        ax.set_title('Watched movie in Watchlist', color='white')
+        ax.set_title('Watched movie in Watchlist', color='white', weight='bold')
         ax.set_ylabel('Count', color='white')
         ax.set_xlabel('Watched?', color='white')
         ax.tick_params(colors='white')
