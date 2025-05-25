@@ -1,0 +1,29 @@
+Wichtige Fließstränge und Quellen
+Der flussaufwärts über alle Mündungspunkte jeweils wasserreichere Strang ist gewässerkundlich der Hauptstrang eines Flusssystems und zumeist auch namentlich der Hauptfluss. Abweichungen von einer solchen Namensgebung gibt es häufig, wenn anstelle des Hauptstrangs zum Beispiel der Strang mit der größeren Richtungskonstanz den Namen beibehält oder derjenige Fluss, dessen Tal wirtschaftlich oder kulturell größere Bedeutung hatte. Wichtige Stränge können auch nach anderen quantitativen Kriterien bestimmt werden, wie etwa nach dem größeren Einzugsgebiet oder nach der größeren Länge, welche beide zu Zeiten ohne genaue Karten kaum präzise zu bestimmen waren. In Disputen um die Hauptquelle eines Flusses (Rheinquelle, Donauquelle) wird oft konkurrierend zum Kriterium der größeren Wasserführung das Kriterium der größeren Länge herangezogen.
+
+Bei Flusssystemen mit an jedem Mündungspunkt deutlich erkennbarem Hauptstrang folgt diesem im Allgemeinen auch der – sprachgeschichtlich oft sehr alte – Flussname. Meistens ist dieser Strang zugleich auch der längste Fließweg. Fließen aber zwei Flüsse ähnlicher Größe zusammen, teilen sich hier, flussaufwärts gesehen, nicht selten Hauptstrang und längster Strang.
+
+Zuweilen vereinigen sich zwei ähnlich große Flüsse, und ihr gemeinsamer Unterlauf trägt einen dritten Namen. Dann nennt man die zusammenfließenden Gewässer Quellflüsse des Unterlaufs; diese namentliche Besonderheit ist allerdings gewässerkundlich nur von geringem Belang. Beispiele solcher Drei-Namens-Zusammenflüsse, bei denen die Quellflusspaarungen im Übrigen recht unterschiedlich sein können, sind (sortiert nach dem Volumen am Zusammenfluss):
+
+Amazonas (28.400 m³/s): aus Marañón (10 % wasserreicher) und Ucayali (40 % länger)
+Rio Madeira (17.100 m³/s): aus Río Beni (8 % wasserreicher) und Río Mamoré (21 % länger)
+Nil (2440 m³/s): aus Blauem Nil (73 % wasserreicher) und Weißem Nil (113 % länger)
+Ganges (694 m³/s): aus Alaknanda (72 % wasserreicher) und Bhagirathi (79 % länger)
+Weser (117 m³/s): aus Fulda (34 % wasserreicher) und Werra (36 % länger)
+Rhein (113 m³/s): aus Hinterrhein (11 % wasserreicher) und Vorderrhein (6 % länger)
+Mulde (60,2 m³/s): aus Freiberger Mulde (33 % wasserreicher) und Zwickauer Mulde (35 % länger)
+Regnitz (25 m³/s): aus Rednitz (27 % wasserreicher) und Pegnitz (1 % länger)
+Main (13,9 m³/s): aus Weißem Main (96 % wasserreicher) und Rotem Main (16 % länger)
+Donau (9,3 m³/s): aus Breg (71 % wasserreicher, 14 % länger) und Brigach
+Saar (3,5 m³/s): aus Roter Saar (16 % wasserreicher, 1 % länger) und Weißer Saar
+
+Flusssystem des Mississippi, aufgehellt: Einzugsgebiet
+Beispiele, bei denen Hauptstränge unterhalb eines Zusammenflusses weiter den Namen des – nach gewässerkundlichen Kriterien – Nebenflusses führen, bietet der Artikel Nebenfluss.
+
+Bei großen Flusssystemen fallen die nach den Kriterien größerer Wasserführung, größeren Einzugsgebietes oder größerer Länge definierten Stränge eines Flusssystems oftmals auseinander. Begünstigt wird diese Inkongruenz, wenn sich die Einzugsgebiete der Oberläufe über Klimazonen unterschiedlicher Aridität erstrecken. In besonderem Maße ist das beim Blauen und Weißen Nil der Fall. Typisch hierfür ist auch die Situation im Stromgebiet des Mississippi: Der Namensstrang zieht hier ungefähr die Mittelachse des Flusssystems, er beginnt wenig oberhalb des Itascasees; dagegen beginnt der längste Fließweg im niederschlagsarmen Westen an der Quelle des Red Rock River und läuft über den Missouri; der Hauptstrang wiederum entsteht im niederschlagsreichen Osten an der Quelle des Allegheny und läuft weiter über den wasserreichen Ohio zum Lower Mississippi.
+
+Hauptstrang nach Namen
+Der durch die historisch gewachsene Namengebung hervorgehobene Fließweg deckt sich somit nicht immer mit dem gewässerkundlich definierten Hauptstrang. Im nicht seltenen Fall wechselnder Namen im Verlauf des Hauptflusses muss zwangsläufig nur ein Flussabschnittsname stellvertretend für das Flusssystem und dessen Hauptstrang stehen. Beispielsweise steht der Abschnittsname Brahmaputra üblicherweise auch für die Abschnitte Tsangpo und Dihang im Oberlauf und Jamuna im Unterlauf, seltener jedoch auch für die folgenden Abschnitte Padma und Lower Meghna. Im Falle des Mobile River bezeichnet der Name nur die mündungsnahe Sammelader eines Flusssystems, dessen Hauptstrang nacheinander die Namen Cartecay, Coosawattee, Oostanaula, Coosa, Alabama und Mobile River führt. Flussnamen sind zur Festlegung von Haupt- und Nebenflüssen somit nur eingeschränkt geeignet.
+
+Hauptstrang nach Volumen
+Der am jeweiligen Mündungspunkt augenscheinlich größere Fluss ist im Allgemeinen der mit dem größeren mittleren Durchfluss (MQ). Der sich so ergebende hydrologische Hauptstrang eines Flusssystems deckt sich daher zumeist mit der überkommenen Namengebung in einem Flusssystem. In vielen Klimaten der Erde ist allerdings der mittlere Niedrigwasserabfluss (MNQ) genauso prägend für das Erscheinungsbild eines Flusses. So sind beispielsweise die Saar bei der Einmündung der Blies und die Donau bei Einmündung des Inn nach den MNQ-Werten die größeren Flüsse, nicht aber nach den MQ-Werten, welche die namentlichen Nebenflüsse Blies und Inn zu Teilstrecken des jeweiligen hydrologischen Hauptstrangs im Saar- bzw. Donausystem machen (infolge ihrer größeren Hochwasseranteile).

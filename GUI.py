@@ -306,7 +306,6 @@ class App(customtkinter.CTk):
                                                       font=customtkinter.CTkFont(size=15, weight="bold"))
             self.button_add.grid(row=5, column=1, padx=400, pady=10, sticky="ew")
 
-        print(customtkinter.get_appearance_mode())
 
         if len([x for x in self.current_movie.reviews if x.user == self.user.id]) == 0:
             self.rating_slider = customtkinter.CTkSlider(self.movie_frame, from_=0, to=5, number_of_steps=5,
@@ -336,9 +335,11 @@ class App(customtkinter.CTk):
         for i, x in enumerate(self.current_movie.reviews):
 
             review_frame = customtkinter.CTkFrame(self.movie_frame, corner_radius=10, fg_color="#2a2a2a")
-            review_frame.grid(row=9 + i, column=0, columnspan=3, padx=20, pady=10, sticky="we")
+            review_frame.grid(row=9 + i, column=0, columnspan=4, padx=20, pady=10, sticky="we")
 
-            review_frame.grid_columnconfigure(1, weight=1)
+            # review_frame.grid_columnconfigure(1, weight=1)
+            # review_frame.grid_columnconfigure(2, weight=1)
+            review_frame.grid_columnconfigure(3, weight=1)
 
             user_label = customtkinter.CTkLabel(
                 review_frame,
@@ -356,6 +357,22 @@ class App(customtkinter.CTk):
             )
             date_label.grid(row=0, column=1, sticky="w", padx=10, pady=(5, 0))
 
+            third_chart = customtkinter.CTkFrame(
+                review_frame,
+                fg_color="#1a1a1a",
+                corner_radius=12,
+                border_width=2,
+                border_color="gray30"
+            )
+            third_chart.grid(row=0, column=2, sticky="w", padx=10, pady=(5, 0))
+
+            country_label = customtkinter.CTkLabel(
+                third_chart,
+                text="",
+                image=customtkinter.CTkImage(Image.open(Utils.get_image(x.lang)), size=(30, 25)),
+            )
+            country_label.pack()
+
 
             if self.user.id == x.user:
                 delete_button = customtkinter.CTkButton(
@@ -364,7 +381,7 @@ class App(customtkinter.CTk):
                     font=customtkinter.CTkFont(size=12),
                     command=lambda: self.delete_review(x)
                 )
-                delete_button.grid(row=0, column=2, sticky="e", padx=10, pady=(5, 0))
+                delete_button.grid(row=0, column=4, sticky="e", padx=10, pady=(5, 0))
             else:
                 delete_button = customtkinter.CTkButton(
                     review_frame,
@@ -372,7 +389,7 @@ class App(customtkinter.CTk):
                     font=customtkinter.CTkFont(size=12),
                     command=lambda: self.report_review(x)
                 )
-                delete_button.grid(row=0, column=2, sticky="e", padx=10, pady=(5, 0))
+                delete_button.grid(row=0, column=4, sticky="e", padx=10, pady=(5, 0))
             text_label = customtkinter.CTkLabel(
                 review_frame,
                 text=x.text,
@@ -392,7 +409,7 @@ class App(customtkinter.CTk):
         self.get_movie_inf(Utils.get_last_respond()[val-1])
 
     def post_review(self):
-        rew = Review(datetime.datetime.now(), self.user.id, self.current_movie, self.textbox.get('1.0', END), self.rating_slider.get()) #TODO language
+        rew = Review(datetime.datetime.now(), self.user.id, self.current_movie, self.textbox.get('1.0', END), self.rating_slider.get(), Utils.test_language(self.textbox.get('1.0', END)))
         Utils.add_review(rew)
         self.movie_frame_event()
         self.get_movie_inf(Utils.get_last_respond()[self.val - 1])

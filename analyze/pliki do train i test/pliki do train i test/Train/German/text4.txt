@@ -1,0 +1,6 @@
+Kognitionswissenschaft ist eine interdisziplinäre Wissenschaft, die sich mit der Verarbeitung von Information im Rahmen von Wahrnehmungs-, Denk- und Entscheidungsprozessen befasst, sowohl beim Menschen als auch bei Tieren oder Maschinen. In ihren Bereich fallen auch Themen wie Gedächtnis, Lernen, Sprache, Emotion, Motivation und Volition.[1]
+Die Kognitionswissenschaft abstrahiert dabei teilweise davon, ob Kognition in organischen Systemen und Lebewesen oder in künstlichen Systemen wie Computern oder Robotern untersucht wird, indem sie kognitive Prozesse als Informationsverarbeitung betrachtet. Methodisch arbeitet sie auf verschiedenen Ebenen:
+der Theoriebildung, die zur Hypothesenbildung dient,
+der kognitiven Modellierung, die kognitive Leistungen mit Hilfe von Computermodellen simuliert und neue Hypothesen in diese Modelle integriert,
+und der empirischen Ebene, die sich mit der empirischen Überprüfung der Modelle und der konkreten Implementierung kognitiver Leistungen befasst.
+Wissenschaftliche Fächer, die an der Kognitionswissenschaft beteiligt sind, sind vor allem Psychologie, Neurowissenschaft, Informatik/künstliche Intelligenz, Linguistik und Philosophie, aber auch Anthropologie und Soziologie.

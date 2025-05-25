@@ -8,12 +8,14 @@ import os
 import requests
 from urllib.parse import quote
 
+
 from Objects import User
 from Objects.Director import Director
 from Objects.Errors import MovieAlreadyExists, ReviewDoesntExist
 from Objects.Genre import Genre
 from Objects.Movie import Movie
 from Objects.Review import Review
+from analyze.Service import analyze
 
 res = None
 
@@ -476,4 +478,24 @@ def get_the_best_genre():
                 temp[str(movie.genre)] = 1
     for v in result:
         result[v] = result[v]/temp[v]
+    return result
+
+
+def get_image(language):
+    if language == "Polish":
+        return "Assets/Flag_of_Poland.png"
+    if language == "English":
+        return "Assets/Flag_of_the_United_States.png"
+    if language == "Czech":
+        return "Assets/Flag_of_the_Czech_Republic.png"
+    if language == "German":
+        return "Assets/Flag_of_Germany.png"
+    if language == "French":
+        return "Assets/Flag_of_France.png"
+    if language is None:
+        return "Assets/question_mark.png"
+    return None
+
+def test_language(prompt):
+    result = analyze(prompt, data_form="String")
     return result
