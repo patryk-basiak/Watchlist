@@ -451,6 +451,8 @@ class App(customtkinter.CTk):
         if self.table is not None:
             self.table.grid_remove()
         if len(respond) == 0:
+            self.notification_manager.show_notification("No movies found", NotifyType.WARNING,
+                                                        duration=1500)
             self.count_label.configure(text=f"No movies found")
             return
         self.table = CTkTable(self.second_frame, row=len(value), values=value, wraplength=2000,
@@ -553,7 +555,9 @@ class App(customtkinter.CTk):
         watchlist = Utils.get_user_watchlist(self.user)
 
         if len(watchlist) == 0:
-            return #TODO
+            self.notification_manager.show_notification("No movies in watchlist", NotifyType.WARNING,
+                                                        duration=1500)
+            return
 
         for r in watchlist:
             to_append = r[0].get_values()[:-1]
