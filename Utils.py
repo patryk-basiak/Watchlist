@@ -456,3 +456,24 @@ def report_review(review, user):
         smtp_server.sendmail(sender, recipients, msg.as_string())
 
 
+def get_user_watchlist_watched(user):
+    result = {"True" : 0, "False":0 }
+    for movie, date in user.watch_list:
+        result[str(movie.watched)] += 1
+    return result
+
+
+def get_the_best_genre():
+    result = {}
+    temp = {}
+    for movie in movie_list:
+        if movie.grade > 0:
+            if movie.genre in result:
+                result[str(movie.genre)] += movie.grade
+                temp[str(movie.genre)] += 1
+            else:
+                result[str(movie.genre)] = movie.grade
+                temp[str(movie.genre)] = 1
+    for v in result:
+        result[v] = result[v]/temp[v]
+    return result
