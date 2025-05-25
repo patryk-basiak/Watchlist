@@ -489,8 +489,8 @@ def update_movie(movie):
     cursor.execute("""
         UPDATE movies
         SET title = ?, release_year = ?, description = ?
-        WHERE title = ? AND release_year = ?
-    """, (movie.title, movie.release_year, movie.description, movie.title, movie.release_year))
+        WHERE id = ?
+    """, (movie.title, movie.release_year, movie.description, movie.id))
     connection.commit()
     connection.close()
 

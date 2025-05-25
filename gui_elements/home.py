@@ -90,10 +90,10 @@ class Home(customtkinter.CTkFrame):
         self.chart_label_watched = customtkinter.CTkLabel(second_chart, text="", image=self.image_watched_chart)
         self.chart_label_watched.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
-        self.image_watched = self.the_best_genre()
-        self.image_watched_chart = customtkinter.CTkImage(self.image_watched, size=(300, 300))
-        self.chart_label_watched = customtkinter.CTkLabel(third_chart, text="", image=self.image_watched_chart)
-        self.chart_label_watched.grid(row=0, column=0, padx=10, pady=10, sticky="e")
+        self.image_genres = self.the_best_genre()
+        self.image_genres_chart = customtkinter.CTkImage(self.image_genres, size=(300, 300))
+        self.chart_label_genres = customtkinter.CTkLabel(third_chart, text="", image=self.image_genres_chart)
+        self.chart_label_genres.grid(row=0, column=0, padx=10, pady=10, sticky="e")
 
     def load_chart_watchlist(self):
         dane = Utils.get_genre_from_watchlist(self.user)
@@ -171,3 +171,16 @@ class Home(customtkinter.CTkFrame):
         plt.close(fig)
         buf.seek(0)
         return Image.open(buf)
+
+    def update_charts(self):
+        new_image1 = self.load_chart_watchlist()
+        self.logo_image = customtkinter.CTkImage(new_image1, size=(300, 300))
+        self.chart_label.configure(image=self.logo_image)
+
+        new_image2 = self.load_chart_watchlist_is_watched()
+        self.image_watched_chart = customtkinter.CTkImage(new_image2, size=(300, 300))
+        self.chart_label_watched.configure(image=self.image_watched_chart)
+
+        new_image3 = self.the_best_genre()
+        self.image_genres_chart = customtkinter.CTkImage(new_image3, size=(300, 300))
+        self.chart_label_genres.configure(image=self.image_genres_chart)

@@ -226,6 +226,7 @@ class App(customtkinter.CTk):
 
     def home_button_event(self):
         self.select_frame_by_name("home")
+        self.home_frame.update_charts()
 
     def find_movies_event(self):
         self.load_table(Utils.get_movie_list())
@@ -635,4 +636,3 @@ class App(customtkinter.CTk):
 
         save_button = customtkinter.CTkButton(self.edit_frame, text="Save changes", command=save_changes)
         save_button.grid(row=4, column=0, padx=10, pady=20, sticky="ew", columnspan=2)
-
