@@ -1,7 +1,7 @@
 import tkinter
 import datetime
 from tkinter import END
-from PIL import Image, ImageTk
+from PIL import Image
 import customtkinter
 from CTkTable import *
 
@@ -406,7 +406,6 @@ class App(customtkinter.CTk):
 
     def movie_id(self, row):
         val = int(list(dict(row).values())[0])
-        print(val)
         if val < 1:
             return
         self.val = val

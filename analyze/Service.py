@@ -3,7 +3,6 @@ import os
 from analyze.Perceptron import Perceptron
 
 perceptrons = [Perceptron(0.01, 26, x) for x in os.listdir('analyze/pliki do train i test/pliki do train i test/Train')]
-print(len(perceptrons))
 def count_chars(string):
     if len(string) == 0:
         return [0]
@@ -52,7 +51,6 @@ def analyze(text, **kwargs):
     for perc in perceptrons:
         outputs.append([perc.language.split("\\")[-1], perc.compute(text)])
     result = max(outputs, key= lambda pe: pe[1])
-    print(result)
     if result[1] > 0.5:
         return result[0]
     return None

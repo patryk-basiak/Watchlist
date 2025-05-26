@@ -1,6 +1,8 @@
 import datetime
+import queue
 import smtplib
 import sqlite3
+import threading
 from email.mime.text import MIMEText
 from xmlrpc.client import DateTime
 from dotenv import load_dotenv
@@ -212,7 +214,6 @@ def get_username_by_id(user_id):
     sql = "SELECT login FROM user where id = ?"
     cursor.execute(sql, (user_id, ))
     rows = cursor.fetchall()
-    print(rows)
     return rows[0][0]
 
 def add_genre(param):
@@ -289,7 +290,6 @@ def remove_from_watchlist(movie, user) -> None:
     cursor.execute(sql, (user.id, movie.id))
     connection.commit()
     user.delete_movie(movie)
-
 
 def set_checkbox(current_movie, param, user) -> None:
     if param:

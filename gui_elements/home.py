@@ -41,13 +41,13 @@ class Home(customtkinter.CTkFrame):
         watchlist_label.grid(row=2, column=1, padx=20, pady=5)
 
         recommended_movie = Utils.get_recommended_movie(user)
-        recommendation_label = customtkinter.CTkLabel(
+        self.recommendation_label = customtkinter.CTkLabel(
             self,
             text=f"⭐ Your recommendation: {recommended_movie.title}",
             font=("Arial", 14, "italic"),
             text_color="lightblue"
         )
-        recommendation_label.grid(row=3, column=1, padx=20, pady=(10, 20))
+        self.recommendation_label.grid(row=3, column=1, padx=20, pady=(10, 20))
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
@@ -149,7 +149,6 @@ class Home(customtkinter.CTkFrame):
 
     def the_best_genre(self):
         dane = Utils.get_the_best_genre()
-        print(dane)
         kolory = self.random_color(len(dane))
 
         plt.style.use('dark_background')
@@ -184,3 +183,5 @@ class Home(customtkinter.CTkFrame):
         new_image3 = self.the_best_genre()
         self.image_genres_chart = customtkinter.CTkImage(new_image3, size=(300, 300))
         self.chart_label_genres.configure(image=self.image_genres_chart)
+
+        self.recommendation_label.configure(text=f"⭐ Your recommendation: {Utils.get_recommended_movie(self.user).title}")

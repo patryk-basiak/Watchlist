@@ -88,6 +88,5 @@ class Movie:
         return [self.title, self.director.full_name(), str(self.release_year), self.genre.name, str(self.grade), self.description, str(self.watched)]
 
     def print_reviews(self):
-        print(self.title + " reviews: ")
         for review in self.reviews:
             print(f"ID: {review.id} User: {review.user}, rating: {review.rating}, text: {review.text}")
