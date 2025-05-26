@@ -4,3 +4,5 @@ class MovieAlreadyExists(Exception):
     '''Created for situation when Movie with the same attributes already exists'''
 class ReviewDoesntExist(Exception):
     '''When review with give attributes doesn't exist'''
+class UserDoesntExist(Exception):
+    '''When user with give attributes doesn't exist'''

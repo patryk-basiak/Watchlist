@@ -13,7 +13,7 @@ from urllib.parse import quote
 
 from Objects import User
 from Objects.Director import Director
-from Objects.Errors import MovieAlreadyExists, ReviewDoesntExist
+from Objects.Errors import MovieAlreadyExists, ReviewDoesntExist, UserDoesntExist
 from Objects.Genre import Genre
 from Objects.Movie import Movie
 from Objects.Review import Review
@@ -22,7 +22,7 @@ from analyze.Service import analyze
 res = None
 
 
-def load_data(data):
+def load_data(data:str) -> list[Movie]:
     movies = []
     with open(data, "r") as f:
         for line in f:
@@ -31,7 +31,7 @@ def load_data(data):
     return movies
 
 
-def load_data_from_database():
+def load_data_from_database() -> list[Movie]:
     connection = sqlite3.connect("watchlist.db")
     cursor = connection.cursor()
 
@@ -98,7 +98,7 @@ WHERE movie_id = ?;
 file = 'films.txt'
 movie_list = load_data_from_database()
 load_dotenv()
-def load_watchlist(user):
+def load_watchlist(user:User) -> None:
     connection = sqlite3.connect("watchlist.db")
     cursor = connection.cursor()
 
@@ -151,7 +151,7 @@ def get_last_respond():
     return res
 
 
-def sort_by(var):
+def sort_by(var:str) -> list[Movie]:
     global res
     if var == "Title":
         val = sorted(get_last_respond(), key=lambda x: x.title)
@@ -177,10 +177,11 @@ def add_movie(movie: Movie) -> None:
     sql = "INSERT INTO movies(title,director_id,release_year, genre_id, description) VALUES(?,?,?,?,? )"
     cursor = connection.cursor()
     cursor.execute(sql, (movie.title, movie.director.id, movie.release_year, movie.genre.id, movie.description))
+    movie.id = cursor.lastrowid
     connection.commit()
     movie_list.append(movie)
 
-def get_all_genres():
+def get_all_genres()->list[Genre]:
     connection = sqlite3.connect("watchlist.db")
     cursor = connection.cursor()
     cursor.execute("SELECT id, name FROM genres")
@@ -189,7 +190,7 @@ def get_all_genres():
     genres = [Genre(genre_id=row[0], name=row[1]) for row in rows]
     return genres
 
-def get_all_directors():
+def get_all_directors()->list[Director]:
     connection = sqlite3.connect("watchlist.db")
     cursor = connection.cursor()
 
@@ -200,7 +201,7 @@ def get_all_directors():
     return directors
 
 
-def add_review(rew):
+def add_review(rew:Review) -> None:
     connection = sqlite3.connect("watchlist.db")
     sql = "INSERT INTO Review(date, user_id, movie_id, text, rating, lang) VALUES(?,?,?,?,?,? )"
     cursor = connection.cursor()
@@ -208,15 +209,17 @@ def add_review(rew):
     connection.commit()
     rew.movie.add_review(rew)
 
-def get_username_by_id(user_id):
+def get_username_by_id(user_id: int) -> User:
     connection = sqlite3.connect("watchlist.db")
     cursor = connection.cursor()
     sql = "SELECT login FROM user where id = ?"
     cursor.execute(sql, (user_id, ))
     rows = cursor.fetchall()
+    if len(rows) == 0:
+        raise UserDoesntExist("User with that id doesnt exists")
     return rows[0][0]
 
-def add_genre(param):
+def add_genre(param:str) -> int:
     connection = sqlite3.connect("watchlist.db")
     sql = "INSERT INTO Genres(name) VALUES(?)"
     cursor = connection.cursor()
@@ -226,7 +229,7 @@ def add_genre(param):
     connection.close()
     return genre_id
 
-def add_director(param):
+def add_director(param:list[str]) -> int:
     connection = sqlite3.connect("watchlist.db")
     sql = "INSERT INTO Directors(name, surname) VALUES(?,?)"
     cursor = connection.cursor()
@@ -241,7 +244,7 @@ def add_director(param):
 
 
 
-def get_movie_from_web(param):
+def get_movie_from_web(param:str)->Movie:
     param = quote(param)
     apikey = "REMOVED"
     x = requests.get(f'https://www.omdbapi.com/?t={param}&apikey={apikey}')
@@ -274,7 +277,7 @@ def get_movie_from_web(param):
     return m
 
 
-def add_movie_to_watchlist(current_movie, user) -> None:
+def add_movie_to_watchlist(current_movie:Movie, user:User) -> None:
     connection = sqlite3.connect("watchlist.db")
     sql = "INSERT INTO User_Movie(userID, movieID, date) VALUES(?,?,? )"
     cursor = connection.cursor()
@@ -283,7 +286,7 @@ def add_movie_to_watchlist(current_movie, user) -> None:
     connection.commit()
     user.add_movie(current_movie,date)
 
-def remove_from_watchlist(movie, user) -> None:
+def remove_from_watchlist(movie:Movie, user:User) -> None:
     connection = sqlite3.connect("watchlist.db")
     sql = "DELETE FROM User_Movie WHERE userId = ? and movieId = ?"
     cursor = connection.cursor()
@@ -291,7 +294,7 @@ def remove_from_watchlist(movie, user) -> None:
     connection.commit()
     user.delete_movie(movie)
 
-def set_checkbox(current_movie, param, user) -> None:
+def set_checkbox(current_movie:Movie, param:bool, user:User) -> None:
     if param:
         connection = sqlite3.connect("watchlist.db")
         sql = "INSERT INTO Watched(userID, movieID) VALUES(?,? )"
@@ -392,7 +395,7 @@ def apply_director_filer(selected_director :[Director]) -> [Movie]:
     return res
 
 
-def delete_review(review):
+def delete_review(review:Review) -> None:
     connection = sqlite3.connect("watchlist.db")
     sql = "DELETE FROM Review WHERE user_id = ? and movie_id = ?"
     cursor = connection.cursor()
@@ -423,6 +426,7 @@ def check_movie_exists(movie : Movie) -> bool:
             return True
 
     return False
+
 def get_review_id(review: Review) -> int:
     connection = sqlite3.connect("watchlist.db")
     cursor = connection.cursor()
@@ -433,7 +437,7 @@ def get_review_id(review: Review) -> int:
         raise ReviewDoesntExist("review with that user_id and movie_id doesnt exists")
     return rows[0][0]
 
-def report_review(review, user):
+def report_review(review:Review, user:User) -> None:
     sender = os.getenv("email_address")
     recipients = os.getenv("recipients")
 
@@ -458,7 +462,7 @@ def report_review(review, user):
         smtp_server.sendmail(sender, recipients, msg.as_string())
 
 
-def get_user_watchlist_watched(user):
+def get_user_watchlist_watched(user:User) -> dict[str, int]:
     result = {"True" : 0, "False":0 }
     for movie, date in user.watch_list:
         result[str(movie.watched)] += 1
@@ -468,7 +472,7 @@ def get_user_watchlist_watched(user):
     return result
 
 
-def get_the_best_genre():
+def get_the_best_genre()->dict[str, int]:
     result = {}
     temp = {}
     for movie in movie_list:
@@ -483,7 +487,7 @@ def get_the_best_genre():
         result[v] = result[v]/temp[v]
     return result
 
-def update_movie(movie):
+def update_movie(movie:Movie) -> None:
     connection = sqlite3.connect("watchlist.db")
     cursor = connection.cursor()
     cursor.execute("""
@@ -495,7 +499,7 @@ def update_movie(movie):
     connection.close()
 
 
-def get_image(language):
+def get_image(language:str)-> str or None:
     if language == "Polish":
         return "Assets/Flag_of_Poland.png"
     if language == "English":
@@ -510,6 +514,6 @@ def get_image(language):
         return "Assets/question_mark.png"
     return None
 
-def test_language(prompt):
+def test_language(prompt:str)-> str:
     result = analyze(prompt, data_form="String")
     return result
