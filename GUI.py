@@ -296,7 +296,8 @@ class App(customtkinter.CTk):
         self.genre.grid(row=3, column=0, padx=20, pady=10, sticky="nsew", columnspan=3)
 
         self.description = customtkinter.CTkLabel(self.movie_frame, text=f"Description:\n {movie.description}",
-                                                  font=customtkinter.CTkFont(size=20, weight="bold"))
+                                                  font=customtkinter.CTkFont(size=20, weight="bold"),wraplength=1000,
+                                                  justify='center')
         self.description.grid(row=4, column=0, padx=20, pady=10, sticky="nsew", columnspan=3)
 
         a = next((x for x in self.user.watch_list if x[0] == movie), None)
