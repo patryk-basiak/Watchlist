@@ -99,25 +99,7 @@ class Home(customtkinter.CTkFrame):
         dane = Utils.get_genre_from_watchlist(self.user)
         kolory = self.random_color(len(dane))
 
-        plt.style.use('dark_background')
-
-        fig, ax = plt.subplots(facecolor='black')
-        ax.set_facecolor('black')
-        bars = ax.bar(dane.keys(), dane.values(), color=kolory)
-
-        ax.set_title('Genres in watchlist', color='white', weight='bold', size=20)
-        ax.set_ylabel('Number', color='white',weight='bold', size=15)
-        ax.set_xlabel('Genre', color='white',weight='bold', size=15)
-        ax.tick_params(colors='white', labelsize=13)
-        ax.grid(axis='y', linestyle='--', alpha=0.3)
-
-        plt.tight_layout()
-
-        buf = BytesIO()
-        fig.savefig(buf, format='png')
-        plt.close(fig)
-        buf.seek(0)
-        return Image.open(buf)
+        return self.load_chart(dane, 'Number', 'Genre', kolory, 'Genre in watchlist')
 
     def random_color(self, n):
         return [f"#{random.randint(50, 255):02x}{random.randint(50, 255):02x}{random.randint(50, 255):02x}" for _ in
@@ -127,49 +109,13 @@ class Home(customtkinter.CTkFrame):
         dane = Utils.get_user_watchlist_watched(self.user)
         kolory = self.random_color(len(dane))
 
-        plt.style.use('dark_background')
-
-        fig, ax = plt.subplots(facecolor='black')
-        ax.set_facecolor('black')
-        bars = ax.bar(dane.keys(), dane.values(), color=kolory)
-
-        ax.set_title('Watched movie in Watchlist', color='white', weight='bold', size=20)
-        ax.set_ylabel('Count', color='white', weight='bold', size=15)
-        ax.set_xlabel('Watched?', color='white', weight='bold', size=15)
-        ax.tick_params(colors='white',labelsize=13)
-        ax.grid(axis='y', linestyle='--', alpha=0.3)
-
-        plt.tight_layout()
-
-        buf = BytesIO()
-        fig.savefig(buf, format='png')
-        plt.close(fig)
-        buf.seek(0)
-        return Image.open(buf)
+        return self.load_chart(dane, 'Count', 'Watched?', kolory, 'Watched movie in Watchlist')
 
     def the_best_genre(self):
         dane = Utils.get_the_best_genre()
         kolory = self.random_color(len(dane))
 
-        plt.style.use('dark_background')
-
-        fig, ax = plt.subplots(facecolor='black')
-        ax.set_facecolor('black')
-        bars = ax.bar(dane.keys(), dane.values(), color=kolory)
-
-        ax.set_title('The best genres by rating', color='white', weight='bold', size=20)
-        ax.set_ylabel('Rating', color='white', weight='bold', size=15)
-        ax.set_xlabel('Genre', color='white', weight='bold', size=15)
-        ax.tick_params(colors='white', labelsize=10.5)
-        ax.grid(axis='y', linestyle='--', alpha=0.3)
-
-        plt.tight_layout()
-
-        buf = BytesIO()
-        fig.savefig(buf, format='png')
-        plt.close(fig)
-        buf.seek(0)
-        return Image.open(buf)
+        return self.load_chart(dane, 'Rating', 'Genre', kolory, 'The best genres by rating')
 
     def update_charts(self):
         new_image1 = self.load_chart_watchlist()
@@ -185,3 +131,23 @@ class Home(customtkinter.CTkFrame):
         self.chart_label_genres.configure(image=self.image_genres_chart)
 
         self.recommendation_label.configure(text=f"⭐ Your recommendation: {Utils.get_recommended_movie(self.user).title}")
+
+    @staticmethod
+    def load_chart(dane, label_y, label_x, kolory, title):
+        fig, ax = plt.subplots(facecolor='black')
+        ax.set_facecolor('black')
+        bars = ax.bar(dane.keys(), dane.values(), color=kolory)
+
+        ax.set_title(title, color='white', weight='bold', size=20)
+        ax.set_ylabel(label_y, color='white', weight='bold', size=15)
+        ax.set_xlabel(label_x, color='white', weight='bold', size=15)
+        ax.tick_params(colors='white', labelsize=10.5)
+        ax.grid(axis='y', linestyle='--', alpha=0.3)
+
+        plt.tight_layout()
+
+        buf = BytesIO()
+        fig.savefig(buf, format='png')
+        plt.close(fig)
+        buf.seek(0)
+        return Image.open(buf)
