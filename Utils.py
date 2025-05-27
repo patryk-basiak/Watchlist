@@ -247,7 +247,7 @@ def add_director(param:list[str]) -> int:
 
 def get_movie_from_web(param:str)->Movie:
     param = quote(param)
-    apikey = "REMOVED"
+    apikey = os.getenv("apikey")
     x = requests.get(f'https://www.omdbapi.com/?t={param}&apikey={apikey}')
     js = x.json()
     try:
