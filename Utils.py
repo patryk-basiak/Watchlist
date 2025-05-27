@@ -127,9 +127,10 @@ def find_movie_by_title(title) -> list[Movie] or None:
             for param in x.title_properties:
                 if param == title:
                     result.append(x)
-                    continue
-            if jaro_find(x.title.lower(), title) > 0.85:
-                result.append(x)
+                    break
+                if jaro_find(param, title) > 0.85:
+                    result.append(x)
+                    break
 
     if len(result) >= 0:
         res = result
@@ -350,11 +351,13 @@ def jaro_find(s1 :str, s2:str) -> float:
     t = 0
     s_p = 0
     prefix = True
+    temp = s1
     for i, e in enumerate(s2):
-        if e in s1:
+        if e in temp:
+            temp = temp.replace(e, "", 1)
             m += 1
             if i < len(s1) and e == s1[i]:
-                if prefix:
+                if prefix and i < 4:
                     s_p += 1
                 t += 1
             else:
