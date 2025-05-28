@@ -576,7 +576,7 @@ class App(customtkinter.CTk):
 
 
         self.table = CTkTable(self.watchlist_frame, row=len(table_data), values=table_data,
-                              wraplength=2000)
+                              wraplength=2000, command=self.get_movie_page_from_watchlist)
         self.table.grid(row=2, column=0, padx=20, pady=20, columnspan=2, sticky="new")
 
     def checkbox_watched(self):
@@ -646,3 +646,11 @@ class App(customtkinter.CTk):
 
         save_button = customtkinter.CTkButton(self.edit_frame, text="Save changes", command=save_changes)
         save_button.grid(row=4, column=0, padx=10, pady=20, sticky="ew", columnspan=2)
+
+    def get_movie_page_from_watchlist(self, row):
+        val = int(list(dict(row).values())[0])
+        if val < 1:
+            return
+        self.movie_frame_event()
+        print(Utils.get_user_watchlist(self.user))
+        self.get_movie_inf(Utils.get_user_watchlist(self.user)[val-1][0])
