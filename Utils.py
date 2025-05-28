@@ -376,7 +376,7 @@ def jaro_find(s1 :str, s2:str) -> float:
     result += l * 0.1 * (1 - result)
     return result
 
-def apply_genre_filer(selected_genres: [Genre])-> [Movie]:
+def apply_genre_filer(selected_genres: list[Genre])-> list[Movie]:
     global res
     all_movies = res
     if res is None:
