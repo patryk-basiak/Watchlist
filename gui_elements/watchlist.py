@@ -40,6 +40,5 @@ class Watchlist(customtkinter.CTkFrame):
                 self.notification_manager.show_notification(
                     "Watchlist exported", NotifyType.SUCCESS, duration=1500)
             except Exception as e:
-                print(e)
                 self.notification_manager.show_notification(
                     "Error saving file", NotifyType.ERROR, duration=1500)

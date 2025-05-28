@@ -19,6 +19,7 @@ class Movie:
             cleaned_properties.append(cleaned_prop)
         self.title_properties = cleaned_properties
         self.watched = watched
+        self.watched_date = None
 
     @property
     def title(self):

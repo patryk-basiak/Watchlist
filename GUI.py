@@ -7,6 +7,7 @@ from CTkTable import *
 
 from CTkFloatingNotifications import NotificationManager, NotifyType
 import Utils
+from Objects import User
 from Objects.Errors import EmptyEntry
 from Objects.Movie import Movie
 from Objects.Review import Review
@@ -15,8 +16,9 @@ from gui_elements.watchlist import Watchlist
 
 
 class App(customtkinter.CTk):
-    def __init__(self, user):
+    def __init__(self, user:User):
         super().__init__()
+        self.current_movie = None
         self.color = "#242424"
         self.notification_manager = NotificationManager(self)
         self.rating_slider = None
@@ -197,7 +199,7 @@ class App(customtkinter.CTk):
         self.iconphoto(True, self.icon)
 
 
-    def select_frame_by_name(self, name):
+    def select_frame_by_name(self, name:str) -> None:
         self.home_button.configure(fg_color=("gray75", "gray25") if name == "home" else "transparent")
         self.find_movies_button.configure(fg_color=("gray75", "gray25") if name == "frame_2" else "transparent")
         self.watchlist_button.configure(fg_color=("gray75", "gray25") if name == "frame_3" else "transparent")
@@ -263,7 +265,7 @@ class App(customtkinter.CTk):
             return "Watchlist is empty"
         return respond
 
-    def get_movie_inf(self, movie):
+    def get_movie_inf(self, movie:Movie)->None:
         self.movie_frame.grid_columnconfigure(0, weight=1)
         self.movie_frame.grid_columnconfigure(1, weight=1)
         self.movie_frame.grid_columnconfigure(2, weight=1)
@@ -405,7 +407,7 @@ class App(customtkinter.CTk):
             )
             text_label.grid(row=1, column=0, columnspan=3, sticky="w", padx=10, pady=(5, 10))
 
-    def movie_id(self, row):
+    def movie_id(self, row)->None:
         val = int(list(dict(row).values())[0])
         if val < 1:
             return
@@ -413,7 +415,7 @@ class App(customtkinter.CTk):
         self.movie_frame_event()
         self.get_movie_inf(Utils.get_last_respond()[val-1])
 
-    def post_review(self):
+    def post_review(self)->None:
         rew = Review(datetime.datetime.now(), self.user.id, self.current_movie, self.textbox.get('1.0', END), self.rating_slider.get(), Utils.test_language(self.textbox.get('1.0', END)))
         Utils.add_review(rew)
         self.movie_frame_event()
@@ -551,7 +553,7 @@ class App(customtkinter.CTk):
 
     def load_watchlist(self):
 
-        table_data = [["Title", "Director", "Release year", "Genre", "Rating", 'Watched', 'Added date']]
+        table_data = [["Title", "Director", "Release year", "Genre", "Rating", 'Watched', 'Added date', 'Watched date']]
         watchlist = Utils.get_user_watchlist(self.user)
 
         if len(watchlist) == 0:
@@ -566,6 +568,10 @@ class App(customtkinter.CTk):
             else:
                 to_append.append("No")
             to_append.append(r[1].strftime("%d.%m.%Y %H:%M "))
+            if r[0].watched_date is None:
+                to_append.append("N/A")
+            else:
+                to_append.append(r[0].watched_date.strftime("%d.%m.%Y"))
             table_data.append(to_append)
 
 

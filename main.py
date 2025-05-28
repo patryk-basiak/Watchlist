@@ -1,4 +1,5 @@
 from GUI import App
+from Login import Login
 from Objects.User import User
 from Utils import load_watchlist
 from analyze.Service import load

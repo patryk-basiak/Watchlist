@@ -90,6 +90,8 @@ WHERE movie_id = ?;
         result = cursor.fetchall()
         if len(result) > 0:
             movie.watched = True
+            if result[0][2] is not None:
+                movie.watched_date = datetime.datetime.strptime(result[0][2], "%Y-%m-%d %H:%M:%S.%f")
     connection.close()
 
 
@@ -298,9 +300,10 @@ def remove_from_watchlist(movie:Movie, user:User) -> None:
 def set_checkbox(current_movie:Movie, param:bool, user:User) -> None:
     if param:
         connection = sqlite3.connect("watchlist.db")
-        sql = "INSERT INTO Watched(userID, movieID) VALUES(?,? )"
+        sql = "INSERT INTO Watched(userID, movieID, watched_date) VALUES(?,?, ?)"
         cursor = connection.cursor()
-        cursor.execute(sql, (user.id, current_movie.id))
+        cursor.execute(sql, (user.id, current_movie.id, datetime.datetime.now()))
+        current_movie.watched_date = datetime.datetime.now()
         connection.commit()
 
     else:
@@ -309,7 +312,9 @@ def set_checkbox(current_movie:Movie, param:bool, user:User) -> None:
         cursor = connection.cursor()
         cursor.execute(sql, (user.id, current_movie.id))
         connection.commit()
+        current_movie.watched_date = None
     current_movie.watched = param
+
 
 def get_genre_from_watchlist(user:User) -> dict[str, int]:
     result = {}
