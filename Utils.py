@@ -249,9 +249,12 @@ def add_director(param:list[str]) -> int:
 
 def get_movie_from_web(param:str)->Movie:
     param = quote(param)
-    apikey = os.getenv("apikey")
-    x = requests.get(f'https://www.omdbapi.com/?t={param}&apikey={apikey}')
-    js = x.json()
+    try:
+        apikey = os.getenv("apikey")
+        x = requests.get(f'https://www.omdbapi.com/?t={param}&apikey={apikey}')
+        js = x.json()
+    except Exception as ApiError:
+        raise ApiError
     try:
         title = js['Title']
     except Exception as e:
@@ -465,9 +468,12 @@ def report_review(review:Review, user:User) -> None:
     msg['Subject'] = "Reported Review Notification"
     msg['From'] = sender
     msg['To'] = recipients
-    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp_server:
-        smtp_server.login(sender, os.getenv("password"))
-        smtp_server.sendmail(sender, recipients, msg.as_string())
+    try:
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp_server:
+            smtp_server.login(sender, os.getenv("password"))
+            smtp_server.sendmail(sender, recipients, msg.as_string())
+    except smtplib.SMTPException:
+        print("Error: unable to send email")
 
 
 def get_user_watchlist_watched(user:User) -> dict[str, int]:

@@ -13,21 +13,25 @@ class Home(customtkinter.CTkFrame):
 
         self.grid_columnconfigure(0, weight=1)
         self.user = user
+        self.current_theme = customtkinter.get_appearance_mode()
 
-        welcome_label = customtkinter.CTkLabel(
+        self.text_color = "white" if self.current_theme == "Dark" else "black"
+        self.recommendation_color = "lightblue" if self.current_theme == "Dark" else "green"
+
+        self.welcome_label = customtkinter.CTkLabel(
             self,
             text=f"🎬 Welcome, {user.login}!",
             font=("Arial", 20, "bold"),
-            text_color="white"
+            text_color=self.text_color,
         )
-        welcome_label.grid(row=0, column=1, padx=20, pady=(20, 10))
-
+        print(self.current_theme)
+        self.welcome_label.grid(row=0, column=1, padx=20, pady=(20, 10))
         total_movies = len(Utils.movie_list)
         total_label = customtkinter.CTkLabel(
             self,
             text=f"📂 Total movies in database: {total_movies}",
             font=("Arial", 14),
-            text_color="gray80"
+            text_color=self.text_color
         )
         total_label.grid(row=1, column=1, padx=20, pady=5)
 
@@ -36,7 +40,7 @@ class Home(customtkinter.CTkFrame):
             self,
             text=f"📝 Your watchlist: {watchlist_count} movies",
             font=("Arial", 14),
-            text_color="gray80"
+            text_color=self.text_color
         )
         watchlist_label.grid(row=2, column=1, padx=20, pady=5)
 
@@ -45,7 +49,7 @@ class Home(customtkinter.CTkFrame):
             self,
             text=f"⭐ Your recommendation: {recommended_movie.title}",
             font=("Arial", 14, "italic"),
-            text_color="lightblue"
+            text_color=self.recommendation_color
         )
         self.recommendation_label.grid(row=3, column=1, padx=20, pady=(10, 20))
 

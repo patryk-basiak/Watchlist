@@ -250,6 +250,7 @@ class App(customtkinter.CTk):
 
     def change_appearance_mode_event(self,new_appearance_mode):
         customtkinter.set_appearance_mode(new_appearance_mode)
+        self.refresh_home_frame()
         if customtkinter.get_appearance_mode() == "Dark":
             self.color = "#242424"
         if customtkinter.get_appearance_mode() == "Light":
@@ -654,3 +655,9 @@ class App(customtkinter.CTk):
         self.movie_frame_event()
         print(Utils.get_user_watchlist(self.user))
         self.get_movie_inf(Utils.get_user_watchlist(self.user)[val-1][0])
+
+    def refresh_home_frame(self):
+        self.home_frame.grid_forget()
+        self.home_frame.destroy()
+        self.home_frame = Home(self.user, self)
+        self.home_frame.grid(row=0, column=1, sticky="nsew")
